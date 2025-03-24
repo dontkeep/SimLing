@@ -36,6 +36,16 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    buildFeatures {
+        viewBinding = true
+        compose = true
+        buildConfig = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
+    }
 }
 
 dependencies {
@@ -72,6 +82,13 @@ dependencies {
 
     // dataStore
     implementation(libs.androidx.datastore.preferences)
+
+    // compose Stuff
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.foundation.layout)
+
+    // QR Code Scanner
+    implementation("com.github.dontkeep:QRZen:v1.1.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
