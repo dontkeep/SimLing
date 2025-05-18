@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-//    id("com.google.dagger.hilt.android")
-//    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
     id("kotlin-parcelize")
 }
 
@@ -49,8 +49,8 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
     // implementation hilt
-//    ksp(libs.hilt.android.compiler)
-//    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.android)
 
     // implementation cameraX
     implementation(libs.androidx.camera.camera2)
