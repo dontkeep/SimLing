@@ -4,6 +4,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -40,6 +41,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 }
 
@@ -84,6 +86,8 @@ dependencies {
 
     // QR Code Scanner
     implementation("com.github.dontkeep:QRZen:v1.1.0")
+
+    implementation(libs.logging.interceptor)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
