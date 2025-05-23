@@ -1,5 +1,6 @@
 package com.doni.simling.models.connections.configs
 
+import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.responses.LoginResponse
 import retrofit2.http.Body
 
