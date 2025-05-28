@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -16,6 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SimLing"
         tools:targetApi="31">
+        <activity
+            android:name=".views.activities.AddFundActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.activities.DetailFundActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.activities.AddFamilyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.activities.FundsActivity"
+            android:exported="false" />
         <activity
             android:name=".views.activities.CameraActivity"
             android:exported="false" />
