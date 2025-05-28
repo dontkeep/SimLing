@@ -153,7 +153,9 @@
                     android:inputType="number"
                     android:singleLine="true" />
 
-            </com.google.android.material.textfield.TextInputLayout><TextView
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
             android:id="@+id/tvPasswordVerify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
