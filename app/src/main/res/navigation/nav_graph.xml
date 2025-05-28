@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/homeFragment"
+    android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.doni.simling.views.fragments.HomeFragment"
+        android:label=""
+        tools:layout="@layout/fragment_home" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/expensesFragment"
+        android:name="com.doni.simling.views.fragments.UsersFragment"
+        android:label=""
+        tools:layout="@layout/fragment_users" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/planFragment"
+        android:name="com.doni.simling.views.fragments.SecurityFragment"
+        android:label=""
+        tools:layout="@layout/fragment_security" >
+    </fragment>
+
+</navigation>
