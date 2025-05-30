@@ -198,13 +198,16 @@
             android:padding="16dp">
 
             <ImageButton
+                android:id="@+id/addFamilyBtn"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_margin="8dp"
                 android:background="@drawable/button_shape"
                 android:src="@drawable/ic_addgroup"
                 android:contentDescription="icon1"/>
+
             <ImageButton
+                android:id="@+id/listFundBtn"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_margin="8dp"
@@ -213,6 +216,7 @@
                 android:contentDescription="icon2"/>
 
             <ImageButton
+                android:id="@+id/addFundBtn"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_margin="8dp"
@@ -221,7 +225,5 @@
                 android:contentDescription="icon3"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

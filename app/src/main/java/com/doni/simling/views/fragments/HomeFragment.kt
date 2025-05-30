@@ -1,25 +1,47 @@
 package com.doni.simling.views.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.doni.simling.R
+import com.doni.simling.databinding.FragmentHomeBinding
+import com.doni.simling.views.activities.AddFamilyActivity
+import com.doni.simling.views.activities.AddFundActivity
+import com.doni.simling.views.activities.FundsActivity
 
 class HomeFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.addFamilyBtn.setOnClickListener {
+            startActivity(Intent(requireContext(), AddFamilyActivity::class.java))
+        }
+
+        binding.listFundBtn.setOnClickListener {
+            startActivity(Intent(requireContext(), FundsActivity::class.java))
+        }
+
+        binding.addFundBtn.setOnClickListener {
+            startActivity(Intent(requireContext(), AddFundActivity::class.java))
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
