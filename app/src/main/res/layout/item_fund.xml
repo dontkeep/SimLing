@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,30 +8,69 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvTitleDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Tanggal: "
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tanggal : 1 Jan 2025"
-            android:textStyle="bold" />
+            android:text="1 Jan 2025"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleDate"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleDate"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleDate" />
+
+        <TextView
+            android:id="@+id/tvTitleDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Deskripsi: "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleDate" />
 
         <TextView
             android:id="@+id/tvDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Deskripsi : Bayar Sampah" />
+            android:text="Lorem ipsum dolor sit amet..."
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleDesc"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleDesc"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleDesc" />
 
         <TextView
-            android:id="@+id/tvTotal"
+            android:id="@+id/tvTitleAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jumlah : Rp 100.000" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Bayar: "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleDesc" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tvBayar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rp 30.000,00"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleAmount"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleAmount"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleAmount" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
