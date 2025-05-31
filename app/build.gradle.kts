@@ -5,6 +5,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     alias(libs.plugins.compose.compiler)
+
 }
 
 android {
@@ -42,6 +43,10 @@ android {
         viewBinding = true
         buildConfig = true
         compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
 }
 

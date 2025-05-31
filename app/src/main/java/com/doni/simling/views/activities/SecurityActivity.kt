@@ -10,7 +10,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.doni.simling.R
 import com.doni.simling.databinding.ActivitySecurityBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SecurityActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySecurityBinding
     private lateinit var navController: NavController
