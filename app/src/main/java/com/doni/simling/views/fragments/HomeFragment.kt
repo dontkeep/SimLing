@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.doni.simling.databinding.FragmentHomeBinding
+import com.doni.simling.helper.DateHelper
 import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.views.activities.AddFamilyActivity
 import com.doni.simling.views.activities.AddFundActivity
@@ -33,6 +34,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvDate.text = DateHelper.getCurrentFormattedDate()
 
         val currentRole = roleManager.getRole()
         binding.addFamilyBtn.setOnClickListener {

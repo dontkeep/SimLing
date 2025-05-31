@@ -53,12 +53,14 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:visibility="visible"
                     android:src="@drawable/ic_avatar" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Admin"
+                    android:visibility="visible"
                     android:layout_marginStart="4dp"
                     android:textSize="14sp"/>
             </LinearLayout>
@@ -85,6 +87,7 @@
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/tvDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Kamis, 30 Apr 2025"
@@ -114,7 +117,9 @@
                         android:layout_height="wrap_content"
                         android:text="Saldo"
                         android:textStyle="bold" />
+
                     <TextView
+                        android:id="@+id/tvAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rp. 20.000.000" />
@@ -134,6 +139,7 @@
                         android:text="Pengeluaran"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tvFundsAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rp. 20.000.000" />
@@ -155,25 +161,65 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/tvTitleMemberAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Warga : 20 Kepala Keluarga" />
+                android:text="Total Warga:  "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
+                android:id="@+id/tvMemberAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jumlah Blok Rumah : 4 Blok (A1 - D10)" />
+                android:text="20 Kepala Keluarga"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTitleMemberAmount"
+                app:layout_constraintStart_toEndOf="@+id/tvTitleMemberAmount"
+                app:layout_constraintTop_toTopOf="@+id/tvTitleMemberAmount" />
+
             <TextView
+                android:id="@+id/tvTitleAddressAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Warga Baru Bulan ini : 2 Keluarga" />
-        </LinearLayout>
+                android:text="Jumlah Blok Rumah:  "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleMemberAmount" />
+
+            <TextView
+                android:id="@+id/tvAddressAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4 blok (A1 - D10)"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintStart_toEndOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleMemberAmount" />
+
+            <TextView
+                android:id="@+id/tvTitleNewMember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warga Baru Bulan Ini:  "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleAddressAmount" />
+
+            <TextView
+                android:id="@+id/tvNewMember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 Keluarga"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTitleNewMember"
+                app:layout_constraintStart_toEndOf="@+id/tvTitleNewMember"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
 
