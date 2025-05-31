@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.doni.simling.R
 import com.doni.simling.databinding.ActivityDebugMenuBinding
 import com.doni.simling.helper.manager.RoleManager
+import com.doni.simling.helper.manager.TokenManager
 import com.doni.simling.views.activities.LoginActivity
 import com.doni.simling.views.activities.MainActivity
 import com.doni.simling.views.activities.SecurityActivity
@@ -21,7 +22,9 @@ class DebugMENU : AppCompatActivity() {
     private lateinit var binding: ActivityDebugMenuBinding
 
     @Inject
-    lateinit var roleManager: RoleManager  // Correct way to inject in Activity
+    lateinit var roleManager: RoleManager
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +44,7 @@ class DebugMENU : AppCompatActivity() {
     private fun setupButtonListeners() {  // Fixed typo in method name (was "setupButtonListeners")
         binding.btnLogin.setOnClickListener {
             roleManager.clearRole() // Clear role when going to login
+            tokenManager.clearToken()
             navigateToLoginActivity()
         }
 
