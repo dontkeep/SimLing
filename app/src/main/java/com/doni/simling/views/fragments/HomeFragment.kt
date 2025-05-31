@@ -13,6 +13,7 @@ import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.views.activities.AddFamilyActivity
 import com.doni.simling.views.activities.AddFundActivity
 import com.doni.simling.views.activities.FundsActivity
+import com.doni.simling.views.activities.IncomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -41,6 +42,10 @@ class HomeFragment : Fragment() {
         Log.d("HomeFragment", "Current Role: $currentRole")
 
         when (currentRole) {
+            RoleManager.ROLE_WARGA -> {
+                binding.roleHeader.visibility = View.GONE
+                binding.addFamilyBtn.visibility = View.GONE
+            }
             RoleManager.ROLE_SECURITY -> {
                 binding.roleHeader.visibility = View.GONE
                 binding.addFamilyBtn.visibility = View.GONE
@@ -57,11 +62,11 @@ class HomeFragment : Fragment() {
         }
 
         binding.listFundBtn.setOnClickListener {
-            startActivity(Intent(requireContext(), FundsActivity::class.java))
+            startActivity(Intent(requireContext(), IncomeActivity::class.java))
         }
 
         binding.addFundBtn.setOnClickListener {
-            startActivity(Intent(requireContext(), AddFundActivity::class.java))
+            startActivity(Intent(requireContext(), FundsActivity::class.java))
         }
     }
 
