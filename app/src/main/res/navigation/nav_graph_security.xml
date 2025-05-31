@@ -13,13 +13,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/expensesFragment"
-        android:name="com.doni.simling.views.fragments.UsersFragment"
-        android:label=""
-        tools:layout="@layout/fragment_users" >
-    </fragment>
-
-    <fragment
         android:id="@+id/securityFragment"
         android:name="com.doni.simling.views.fragments.SecurityFragment"
         android:label=""

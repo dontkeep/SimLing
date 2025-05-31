@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         when (targetFragment) {
             "HomeFragment" -> navController.navigate(R.id.homeFragment)
             "ExpensesFragment" -> navController.navigate(R.id.expensesFragment)
-            "PlanFragment" -> navController.navigate(R.id.planFragment)
+            "PlanFragment" -> navController.navigate(R.id.securityFragment)
             else -> navController.navigate(R.id.homeFragment)
         }
     }
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             when (position) {
                 0 -> navController.navigate(R.id.homeFragment)
                 1 -> navController.navigate(R.id.expensesFragment)
-                else -> navController.navigate(R.id.planFragment)
+                else -> navController.navigate(R.id.securityFragment)
             }
         }
     }
