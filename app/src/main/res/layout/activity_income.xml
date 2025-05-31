@@ -46,7 +46,7 @@
                 android:id="@+id/roleHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Daftar Pembayaran Kas"
+                android:text="Pembayaran Kas"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
