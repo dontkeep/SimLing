@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,30 +8,69 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvTitleDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Tanggal: "
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tanggal : 1 Jan 2025"
-            android:textStyle="bold" />
+            android:text="1 Jan 2025"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleDate"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleDate"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleDate" />
 
         <TextView
-            android:id="@+id/tvHour"
+            android:id="@+id/tvTitleTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jam : 07:00" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Jam: "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleDate" />
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21:00"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleTime"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleTime"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleTime" />
+
+        <TextView
+            android:id="@+id/tvTitleUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="User: "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleTime" />
 
         <TextView
             android:id="@+id/tvUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User : Asep" />
+            android:text="Asep"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleUser"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleUser"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleUser" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
