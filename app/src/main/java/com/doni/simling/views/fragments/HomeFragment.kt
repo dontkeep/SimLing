@@ -35,8 +35,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val currentRole = roleManager.getRole()
-        Log.d("HomeFragment", "Current role: $currentRole")
-
         binding.addFamilyBtn.setOnClickListener {
             startActivity(Intent(requireContext(), AddFamilyActivity::class.java))
         }

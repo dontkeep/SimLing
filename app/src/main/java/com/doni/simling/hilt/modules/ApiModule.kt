@@ -11,5 +11,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 object ApiModule {
     @Provides
+    fun provideApiConfig(): ApiConfig = ApiConfig()
+
+    @Provides
     fun provideApiServices(apiConfig: ApiConfig): ApiServices = apiConfig.getApiService()
 }
