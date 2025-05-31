@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.doni.simling.databinding.FragmentHomeBinding
+import com.doni.simling.helper.DateHelper
 import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.views.activities.AddFamilyActivity
 import com.doni.simling.views.activities.AddFundActivity
@@ -34,7 +35,23 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tvDate.text = DateHelper.getCurrentFormattedDate()
+
         val currentRole = roleManager.getRole()
+        Log.d("HomeFragment", "Current Role: $currentRole")
+
+        when (currentRole) {
+            RoleManager.ROLE_SECURITY -> {
+                binding.roleHeader.visibility = View.GONE
+                binding.addFamilyBtn.visibility = View.GONE
+                binding.listFundBtn.visibility = View.GONE
+                binding.addFundBtn.visibility = View.GONE
+                binding.cardWarga.visibility = View.GONE
+                binding.cardSummary.visibility = View.GONE
+                binding.cardMenuSecurity.visibility = View.VISIBLE
+            }
+        }
+
         binding.addFamilyBtn.setOnClickListener {
             startActivity(Intent(requireContext(), AddFamilyActivity::class.java))
         }

@@ -66,22 +66,16 @@ class DebugMENU : AppCompatActivity() {
 
     private fun navigateToLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
-        finish()
     }
 
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
-        finish()
     }
 
     private fun navigateToSecurityActivity() {
         val intent = Intent(this, SecurityActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
-        finish()
     }
 }

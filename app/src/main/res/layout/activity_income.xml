@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".views.activities.FundsActivity">
+    tools:context=".views.activities.IncomeActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardParent"
@@ -31,22 +31,22 @@
             android:padding="16dp">
 
             <ImageView
-                android:id="@+id/icCalender"
+                android:id="@+id/icCalendar"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="16dp"
                 android:clickable="true"
                 android:contentDescription="@string/content_image"
                 android:src="@drawable/ic_calendar"
-                app:layout_constraintBottom_toBottomOf="@+id/titleHeader"
+                app:layout_constraintBottom_toBottomOf="@+id/roleHeader"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/titleHeader" />
+                app:layout_constraintTop_toTopOf="@+id/roleHeader" />
 
             <TextView
-                android:id="@+id/titleHeader"
+                android:id="@+id/roleHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Daftar Pengeluaran"
+                android:text="Pembayaran Kas"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleHeader">
+                app:layout_constraintTop_toBottomOf="@+id/roleHeader">
 
                 <ImageView
                     android:layout_width="20dp"

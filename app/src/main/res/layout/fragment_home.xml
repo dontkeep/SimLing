@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -33,36 +33,62 @@
                 android:layout_height="wrap_content"
                 android:text="SIMLING"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/subtitleHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Cluster Cahaya Mekarwangi"
                 android:textSize="16sp"
-                android:layout_marginTop="4dp"/>
+                app:layout_constraintEnd_toEndOf="@+id/titleHeader"
+                app:layout_constraintStart_toStartOf="@+id/titleHeader"
+                app:layout_constraintTop_toBottomOf="@+id/titleHeader" />
 
             <LinearLayout
+                android:id="@+id/roleHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:layout_marginTop="8dp">
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/subtitleHeader"
+                app:layout_constraintStart_toStartOf="@+id/subtitleHeader"
+                app:layout_constraintTop_toBottomOf="@+id/subtitleHeader">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_avatar" />
+                    android:src="@drawable/ic_avatar"
+                    android:visibility="visible" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Admin"
                     android:layout_marginStart="4dp"
-                    android:textSize="14sp"/>
+                    android:text="Admin"
+                    android:textSize="14sp"
+                    android:visibility="visible" />
             </LinearLayout>
-        </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/logoutBtn"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/button_shape"
+                android:contentDescription="icon1"
+                android:src="@drawable/ic_logout"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -72,7 +98,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="25dp"
         app:cardElevation="2dp"
         app:layout_constraintTop_toBottomOf="@id/cardParent"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,6 +111,7 @@
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/tvDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Kamis, 30 Apr 2025"
@@ -114,7 +141,9 @@
                         android:layout_height="wrap_content"
                         android:text="Saldo"
                         android:textStyle="bold" />
+
                     <TextView
+                        android:id="@+id/tvAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rp. 20.000.000" />
@@ -134,6 +163,7 @@
                         android:text="Pengeluaran"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tvFundsAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rp. 20.000.000" />
@@ -149,33 +179,72 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="25dp"
         app:cardElevation="4dp"
         app:layout_constraintTop_toBottomOf="@id/cardSummary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/tvTitleMemberAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Warga : 20 Kepala Keluarga" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Jumlah Blok Rumah : 4 Blok (A1 - D10)" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Warga Baru Bulan ini : 2 Keluarga" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:text="Total Warga:  "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/tvMemberAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20 Kepala Keluarga"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTitleMemberAmount"
+                app:layout_constraintStart_toEndOf="@+id/tvTitleMemberAmount"
+                app:layout_constraintTop_toTopOf="@+id/tvTitleMemberAmount" />
+
+            <TextView
+                android:id="@+id/tvTitleAddressAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jumlah Blok Rumah:  "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleMemberAmount" />
+
+            <TextView
+                android:id="@+id/tvAddressAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4 blok (A1 - D10)"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintStart_toEndOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleMemberAmount" />
+
+            <TextView
+                android:id="@+id/tvTitleNewMember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warga Baru Bulan Ini:  "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleAddressAmount" />
+
+            <TextView
+                android:id="@+id/tvNewMember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 Keluarga"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTitleNewMember"
+                app:layout_constraintStart_toEndOf="@+id/tvTitleNewMember"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardMenu"
@@ -184,7 +253,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="25dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -227,19 +296,43 @@
                 android:contentDescription="icon3"/>
         </LinearLayout>
 
-        <LinearLayout
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardMenuSecurity"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="110dp"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="4dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardParent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/menuSecurityIcon"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:gravity="center"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:visibility="visible">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Scan Barcode"/>
-        </LinearLayout>
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:text="Scan Barcode"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
