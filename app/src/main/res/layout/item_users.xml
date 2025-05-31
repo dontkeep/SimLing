@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,30 +8,50 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvBlok"
+            android:id="@+id/tvTitleAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Blok : A1"
-            android:textStyle="bold" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Alamat(Blok): "
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvKepala"
+            android:id="@+id/tvAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kepala Keluarga : Doni Arafat" />
+            android:text="A1"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleAddress"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleAddress"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleAddress" />
 
         <TextView
-            android:id="@+id/tvIstri"
+            android:id="@+id/tvTitleMember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Istri : Rahayu Sri" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Kepala Keluarga: "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleAddress" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tvMember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Doni Arafat"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitleMember"
+            app:layout_constraintStart_toEndOf="@+id/tvTitleMember"
+            app:layout_constraintTop_toTopOf="@+id/tvTitleMember" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
