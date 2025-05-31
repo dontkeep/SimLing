@@ -38,6 +38,20 @@ class HomeFragment : Fragment() {
         binding.tvDate.text = DateHelper.getCurrentFormattedDate()
 
         val currentRole = roleManager.getRole()
+        Log.d("HomeFragment", "Current Role: $currentRole")
+
+        when (currentRole) {
+            RoleManager.ROLE_SECURITY -> {
+                binding.roleHeader.visibility = View.GONE
+                binding.addFamilyBtn.visibility = View.GONE
+                binding.listFundBtn.visibility = View.GONE
+                binding.addFundBtn.visibility = View.GONE
+                binding.cardWarga.visibility = View.GONE
+                binding.cardSummary.visibility = View.GONE
+                binding.cardMenuSecurity.visibility = View.VISIBLE
+            }
+        }
+
         binding.addFamilyBtn.setOnClickListener {
             startActivity(Intent(requireContext(), AddFamilyActivity::class.java))
         }
