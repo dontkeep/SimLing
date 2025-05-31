@@ -43,4 +43,25 @@ class DataRepositories @Inject constructor(
             emit(Resource.Error(e.message ?: "An error occurred"))
         }
     }
+
+    fun logout(): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token?.isNotEmpty() == true) {
+                val response = apiServices.logout("Bearer $token")
+                if (response.message == "Logout successful") {
+                    tokenManager.clearToken()
+                    roleManager.clearRole()
+                    emit(Resource.Success(true))
+                } else {
+                    emit(Resource.Error("Logout failed"))
+                }
+            } else {
+                emit(Resource.Error("No token found"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
 }
