@@ -18,6 +18,12 @@
         android:theme="@style/Theme.SimLing"
         tools:targetApi="31">
         <activity
+            android:name=".views.activities.SecurityActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.activities.MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.activities.AddFundActivity"
             android:exported="false" />
         <activity
@@ -33,10 +39,10 @@
             android:name=".views.activities.CameraActivity"
             android:exported="false" />
         <activity
-            android:name=".views.activities.MainActivity"
+            android:name=".views.activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".views.activities.LoginActivity"
+            android:name=".views.DebugMENU"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
