@@ -212,6 +212,33 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+            <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alamat"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textFieldAddress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textFieldAddress" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textFieldAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textFieldPassword"
+                app:layout_constraintTop_toBottomOf="@+id/textFieldPasswordVerify">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tvCategoryLabel"
@@ -231,7 +258,7 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/textFieldPasswordVerify"
                 app:layout_constraintStart_toStartOf="@+id/textFieldPasswordVerify"
-                app:layout_constraintTop_toBottomOf="@+id/textFieldPasswordVerify">
+                app:layout_constraintTop_toBottomOf="@+id/textFieldAddress">
 
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
@@ -253,7 +280,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
