@@ -5,8 +5,10 @@ import com.doni.simling.helper.Resource
 import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.helper.manager.TokenManager
 import com.doni.simling.models.connections.configs.ApiServices
+import com.doni.simling.models.connections.requests.FamilyMembers
 import com.doni.simling.models.connections.requests.LoginRequest
-import com.doni.simling.models.connections.responses.LoginResponse
+import com.doni.simling.models.connections.requests.UserRequest
+import com.doni.simling.models.connections.responses.CreateUserResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -64,4 +66,39 @@ class DataRepositories @Inject constructor(
             emit(Resource.Error(e.message ?: "An error occurred"))
         }
     }
+
+    fun addFamily(
+        name: String,
+        phoneNo: String,
+        email: String,
+        password: String,
+        address: String,
+        roleId: Int
+    ): Flow<Resource<CreateUserResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.createUser(
+                token = "Bearer $token",
+                userRequest = UserRequest(
+                    phone_no = phoneNo,
+                    email = email,
+                    password = password,
+                    name = name,
+                    address = address,
+                    role_id = roleId,
+                    family_members = emptyList()
+                )
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
 }
