@@ -7,23 +7,32 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.toColorInt
+import androidx.fragment.app.viewModels
 import com.doni.simling.databinding.FragmentHomeBinding
 import com.doni.simling.helper.DateHelper
+import com.doni.simling.helper.Resource
 import com.doni.simling.helper.manager.RoleManager
+import com.doni.simling.helper.manager.TokenManager
+import com.doni.simling.viewmodels.LogoutViewModel
 import com.doni.simling.views.activities.AddFamilyActivity
-import com.doni.simling.views.activities.AddFundActivity
 import com.doni.simling.views.activities.FundsActivity
 import com.doni.simling.views.activities.IncomeActivity
+import com.doni.simling.views.activities.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
     @Inject
     lateinit var roleManager: RoleManager
+
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: LogoutViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +55,7 @@ class HomeFragment : Fragment() {
                 binding.roleHeader.visibility = View.GONE
                 binding.addFamilyBtn.visibility = View.GONE
             }
+
             RoleManager.ROLE_SECURITY -> {
                 binding.roleHeader.visibility = View.GONE
                 binding.addFamilyBtn.visibility = View.GONE
@@ -67,6 +77,39 @@ class HomeFragment : Fragment() {
 
         binding.addFundBtn.setOnClickListener {
             startActivity(Intent(requireContext(), FundsActivity::class.java))
+        }
+
+        binding.logoutBtn.setOnClickListener {
+            viewModel.logout()
+            observeLogoutState()
+        }
+    }
+
+    private fun observeLogoutState() {
+        viewModel.logoutStateLiveData.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    binding.progressIndicator.visibility = View.VISIBLE
+                    binding.logoutBtn.isEnabled = false
+                    binding.addFamilyBtn.isEnabled = false
+                    binding.listFundBtn.isEnabled = false
+                    binding.addFundBtn.isEnabled = false
+                    binding.cardWarga.isEnabled = false
+                    binding.cardSummary.isEnabled = false
+                    binding.cardMenuSecurity.isEnabled = false
+                    binding.root.foreground = "#80000000".toColorInt().toDrawable()
+                }
+                is Resource.Success -> {
+                    binding.progressIndicator.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Logout successful", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                    requireActivity().finish()
+                }
+                is Resource.Error -> {
+                    binding.progressIndicator.visibility = View.GONE
+                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

@@ -55,7 +55,7 @@ class DataRepositories @Inject constructor(
             val token = tokenManager.getToken()
             if (token?.isNotEmpty() == true) {
                 val response = apiServices.logout("Bearer $token")
-                if (response.message == "Logout successful") {
+                if (response.message.lowercase().contains("logout success")) {
                     tokenManager.clearToken()
                     roleManager.clearRole()
                     emit(Resource.Success(true))
