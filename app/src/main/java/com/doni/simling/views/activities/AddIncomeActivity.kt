@@ -1,21 +1,211 @@
 package com.doni.simling.views.activities
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.doni.simling.R
+import com.doni.simling.databinding.ActivityAddIncomeBinding
+import com.doni.simling.helper.Resource
+import com.doni.simling.helper.setupCurrencyFormatting
+import com.doni.simling.models.connections.responses.CreateFundResponse
+import com.doni.simling.viewmodels.AddFundViewModel
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
+@AndroidEntryPoint
 class AddIncomeActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityAddIncomeBinding
+
+    private var receiptImagePath: String? = null
+    private val viewModel: AddFundViewModel by viewModels()
+
+    private val launcherGallery = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            processSelectedImage(uri)
+        } else {
+            Snackbar.make(binding.root, "Tidak ada gambar yang dipilih", Snackbar.LENGTH_SHORT)
+                .show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_add_income)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityAddIncomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        setupCurrencyFormatting(binding.textFieldTotal.editText as TextInputEditText)
+
+        binding.cardImage.setOnClickListener {
+            openGallery()
+        }
+
+        binding.saveBtn.setOnClickListener {
+            handleSaveButtonClick()
+        }
+    }
+
+    private fun handleSaveButtonClick() {
+        lifecycleScope.launch {
+            val amountText = binding.textFieldTotal.editText?.text?.toString() ?: ""
+
+            val cleanString = amountText.replace("[Rp,.\\s]".toRegex(), "")
+            if (cleanString.isEmpty()) {
+                Toast.makeText(
+                    this@AddIncomeActivity,
+                    "Jumlah tidak boleh kosong",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+
+            val address = binding.textFieldAddress.editText?.text?.toString()
+            if (address.isNullOrEmpty()) {
+                Toast.makeText(
+                    this@AddIncomeActivity,
+                    "Blok tidak boleh kosong",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+
+            if (receiptImagePath == null) {
+                Toast.makeText(
+                    this@AddIncomeActivity,
+                    "Harap pilih gambar struk",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+
+            val amountRequestBody = createRequestBody(cleanString)
+            val descriptionRequestBody = createRequestBody("")
+            val isIncomeRequestBody = createRequestBody("true")
+            val statusRequestBody = createRequestBody("Pending")
+            val blockRequestBody = createRequestBody(address)
+
+            receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
+            val receiptImagePart = createImagePart("image", receiptImagePath)
+
+            if (receiptImagePart == null) {
+                Toast.makeText(
+                    this@AddIncomeActivity,
+                    "Gagal memproses gambar",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+
+            viewModel.addFund(
+                amount = amountRequestBody,
+                description = descriptionRequestBody,
+                isIncome = isIncomeRequestBody,
+                status = statusRequestBody,
+                image = receiptImagePart,
+                block = blockRequestBody
+            ).collect { resource ->
+                handleResource(resource)
+            }
+        }
+    }
+
+    private fun processSelectedImage(uri: Uri) {
+        val file = uriToFile(uri)
+        receiptImagePath = file.absolutePath
+        viewModel.setImageUri(receiptImagePath!!)
+        binding.imageView.setImageURI(uri)
+    }
+
+    private fun openGallery() {
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun createRequestBody(value: String?): okhttp3.RequestBody =
+        value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull())
+
+    private fun createImagePart(partName: String, uriPath: String?): MultipartBody.Part? {
+        Log.d("CreateListActivity", "Image Path: $uriPath")
+        uriPath?.let { path ->
+            val file = File(path)
+            if (!file.exists()) {
+                Log.e("CreateListActivity", "File not found at path: $path")
+                return null
+            }
+
+            val requestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            return MultipartBody.Part.createFormData(partName, file.name, requestBody)
+        }
+        return null
+    }
+
+
+    private fun uriToFile(uri: Uri): File {
+        val inputStream = contentResolver.openInputStream(uri)
+        val file = File.createTempFile("receipt_", ".jpg", cacheDir)
+        inputStream?.use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        return file
+    }
+
+
+    private fun handleResource(resource: Resource<CreateFundResponse>) {
+        when (resource) {
+            is Resource.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.saveBtn.isEnabled = false
+                binding.textFieldTotal.isEnabled = false
+                binding.textFieldAddress.isEnabled = false
+                binding.root.foreground = "#80000000".toColorInt().toDrawable()
+            }
+
+            is Resource.Success -> {
+                resetUIState()
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this, "Berhasil menambahkan pengeluaran", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            is Resource.Error -> {
+                resetUIState()
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this, "Error ${resource.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun resetUIState() {
+        binding.progressBar.visibility = View.GONE
+        binding.textFieldTotal.isEnabled = true
+        binding.textFieldAddress.isEnabled = true
+        binding.root.foreground = null
     }
 }
