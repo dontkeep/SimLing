@@ -41,6 +41,7 @@ class IncomeActivity : AppCompatActivity() {
             }
             ROLE_WARGA -> {
                 binding.floatingActionButton.visibility = View.VISIBLE
+                binding.tvRole.visibility = View.GONE
             }
         }
 

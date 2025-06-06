@@ -38,9 +38,10 @@ class FundsActivity : AppCompatActivity() {
         when (role) {
             ROLE_ADMIN -> {
                 binding.floatingActionButton.visibility = View.VISIBLE
-            }
+                            }
             ROLE_WARGA-> {
                 binding.floatingActionButton.visibility = View.GONE
+                binding.tvRole.visibility = View.GONE
             }
         }
 
