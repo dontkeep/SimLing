@@ -103,11 +103,9 @@ class AddFundActivity : AppCompatActivity() {
 
     private fun handleSaveButtonClick() {
         lifecycleScope.launch {
-            // Get the text from the EditText, not the TextInputLayout
             val amountText = binding.textFieldTotal.editText?.text?.toString() ?: ""
             val cleanString = amountText.replace("[Rp,.\\s]".toRegex(), "")
 
-            // Check if the string is not empty before converting to Long
             if (cleanString.isEmpty()) {
                 Toast.makeText(
                     this@AddFundActivity,
@@ -117,7 +115,6 @@ class AddFundActivity : AppCompatActivity() {
                 return@launch
             }
 
-            // Validate description
             val description = binding.textFieldDesc.editText?.text?.toString()
             if (description.isNullOrEmpty()) {
                 Toast.makeText(
@@ -128,7 +125,6 @@ class AddFundActivity : AppCompatActivity() {
                 return@launch
             }
 
-            // Validate image (if required)
             if (receiptImagePath == null) {
                 Toast.makeText(
                     this@AddFundActivity,
@@ -147,7 +143,6 @@ class AddFundActivity : AppCompatActivity() {
             receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
             val receiptImagePart = createImagePart("image", receiptImagePath)
 
-            // Check if image part was created successfully
             if (receiptImagePart == null) {
                 Toast.makeText(
                     this@AddFundActivity,
@@ -225,9 +220,7 @@ class AddFundActivity : AppCompatActivity() {
             is Resource.Success -> {
                 resetUIState()
                 binding.progressBar.visibility = View.GONE
-                val intent = Intent(this, MainActivity::class.java)
                 Toast.makeText(this, "Berhasil menambahkan pengeluaran", Toast.LENGTH_SHORT).show()
-                startActivity(intent)
                 finish()
             }
 
