@@ -104,13 +104,13 @@ class DataRepositories @Inject constructor(
         }
     }
 
-    fun createFund(
+    fun addFund(
         amount: RequestBody,
         description: RequestBody,
         isIncome: RequestBody,
         status: RequestBody,
-        block: RequestBody,
-        images: MultipartBody.Part
+        image: MultipartBody.Part,
+        block: RequestBody?,
     ): Flow<Resource<CreateFundResponse>> = flow {
         emit(Resource.Loading())
         try {
@@ -126,8 +126,8 @@ class DataRepositories @Inject constructor(
                 description = description,
                 isIncome = isIncome,
                 status = status,
-                block = block,
-                images = images
+                image = image,
+                block = block
             )
 
             if (response.isSuccessful) {
