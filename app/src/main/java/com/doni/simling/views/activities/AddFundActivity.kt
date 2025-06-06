@@ -145,7 +145,7 @@ class AddFundActivity : AppCompatActivity() {
             val blockRequestBody = createRequestBody("")
 
             receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
-            val receiptImagePart = createImagePart("receipt_image", receiptImagePath)
+            val receiptImagePart = createImagePart("image", receiptImagePath)
 
             // Check if image part was created successfully
             if (receiptImagePart == null) {
@@ -171,8 +171,10 @@ class AddFundActivity : AppCompatActivity() {
     }
 
     private fun processSelectedImage(uri: Uri) {
+        val file = uriToFile(uri)
+        receiptImagePath = file.absolutePath
+        viewModel.setImageUri(receiptImagePath!!)
         binding.imageView.setImageURI(uri)
-        receiptImagePath = uri.toString()
     }
 
     private fun openGallery() {
@@ -185,11 +187,10 @@ class AddFundActivity : AppCompatActivity() {
     private fun createImagePart(partName: String, uriPath: String?): MultipartBody.Part? {
         Log.d("CreateListActivity", "Image Path: $uriPath")
         uriPath?.let { path ->
-            val uri = Uri.parse(path)
-            val inputStream = contentResolver.openInputStream(uri)
-            val file = File(cacheDir, "temp_image.jpeg")
-            file.outputStream().use { outputStream ->
-                inputStream?.copyTo(outputStream)
+            val file = File(path)
+            if (!file.exists()) {
+                Log.e("CreateListActivity", "File not found at path: $path")
+                return null
             }
 
             val requestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
@@ -197,6 +198,19 @@ class AddFundActivity : AppCompatActivity() {
         }
         return null
     }
+
+
+    private fun uriToFile(uri: Uri): File {
+        val inputStream = contentResolver.openInputStream(uri)
+        val file = File.createTempFile("receipt_", ".jpg", cacheDir)
+        inputStream?.use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        return file
+    }
+
 
     private fun handleResource(resource: Resource<CreateFundResponse>) {
         when (resource) {

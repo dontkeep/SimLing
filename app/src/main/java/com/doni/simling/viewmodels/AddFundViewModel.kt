@@ -36,4 +36,8 @@ class AddFundViewModel @Inject constructor(
         block = block,
     )
 
+    fun setImageUri(path: String) {
+        _imageUri.value = path
+    }
+
 }
