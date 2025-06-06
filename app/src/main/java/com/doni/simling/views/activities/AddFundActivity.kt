@@ -136,7 +136,7 @@ class AddFundActivity : AppCompatActivity() {
 
             val amountRequestBody = createRequestBody(cleanString)
             val descriptionRequestBody = createRequestBody(description)
-            val isIncomeRequestBody = createRequestBody("true")
+            val isIncomeRequestBody = createRequestBody("false")
             val statusRequestBody = createRequestBody("Pending")
             val blockRequestBody = createRequestBody("")
 
