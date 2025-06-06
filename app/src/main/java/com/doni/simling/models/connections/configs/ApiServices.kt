@@ -26,7 +26,7 @@ interface ApiServices {
         @Body loginRequest: LoginRequest
     ): LoginResponse
 
-    @POST("/logout")
+    @POST("/api/logout")
     suspend fun logout(
         @Header("Authorization") token: String
     ): LogoutResponse
