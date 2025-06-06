@@ -2,6 +2,7 @@ package com.doni.simling.models.connections.configs
 
 import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
+import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
@@ -91,8 +92,8 @@ interface ApiServices {
         @Part("is_income") isIncome: RequestBody,
         @Part("status") status: RequestBody,
         @Part("block") block: RequestBody,
-        @Part images: MultipartBody.Part // for 1 files, wrap with list if you want to upload multiple files
-    ): Response<CreateUserResponse>
+        @Part images: MultipartBody.Part
+    ): Response<CreateFundResponse>
 
     @PUT("/api/funds/{id}/reject")
     suspend fun rejectFund(

@@ -8,9 +8,12 @@ import com.doni.simling.models.connections.configs.ApiServices
 import com.doni.simling.models.connections.requests.FamilyMembers
 import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
+import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -96,6 +99,44 @@ class DataRepositories @Inject constructor(
                 )
             )
             emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun createFund(
+        amount: RequestBody,
+        description: RequestBody,
+        isIncome: RequestBody,
+        status: RequestBody,
+        block: RequestBody,
+        images: MultipartBody.Part
+    ): Flow<Resource<CreateFundResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.createFund(
+                token = "Bearer $token",
+                amount = amount,
+                description = description,
+                isIncome = isIncome,
+                status = status,
+                block = block,
+                images = images
+            )
+
+            if (response.isSuccessful) {
+                response.body()?.let { fundResponse ->
+                    emit(Resource.Success(fundResponse))
+                } ?: emit(Resource.Error("Response body is null"))
+            } else {
+                emit(Resource.Error(response.message() ?: "Unknown error"))
+            }
         } catch (e: Exception) {
             emit(Resource.Error(e.message ?: "An error occurred"))
         }
