@@ -1,10 +1,5 @@
 package com.doni.simling.views.activities
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -15,16 +10,13 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.doni.simling.R
 import com.doni.simling.databinding.ActivityAddFundBinding
 import com.doni.simling.helper.Resource
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.viewmodels.AddFundViewModel
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
@@ -33,9 +25,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import com.doni.simling.helper.setupCurrencyFormatting
@@ -48,25 +37,6 @@ class AddFundActivity : AppCompatActivity() {
     private var receiptImagePath: String? = null
 
     private val viewModel: AddFundViewModel by viewModels()
-
-//    private val requestPermissionsLauncher = registerForActivityResult(
-//        ActivityResultContracts.RequestPermission()
-//    ) { isGranted ->
-//        if (isGranted) {
-//            val intent = Intent(this, CameraActivity::class.java)
-//            startActivity(intent)
-//        } else {
-//            Toast.makeText(this, R.string.permission_request_denied, Toast.LENGTH_LONG).show()
-//        }
-//    }
-//
-//    private fun allPermissionsGranted(): Boolean {
-//        val cameraGranted = ContextCompat.checkSelfPermission(
-//            this, REQUIRED_CAMERA_PERMISSION
-//        ) == PackageManager.PERMISSION_GRANTED
-//
-//        return cameraGranted
-//    }
 
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -240,8 +210,4 @@ class AddFundActivity : AppCompatActivity() {
         binding.textFieldTotal.isEnabled = true
         binding.root.foreground = null
     }
-
-//    companion object {
-//        private const val REQUIRED_CAMERA_PERMISSION = Manifest.permission.CAMERA
-//    }
 }
