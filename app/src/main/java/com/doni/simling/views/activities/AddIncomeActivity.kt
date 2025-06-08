@@ -15,12 +15,11 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.doni.simling.R
 import com.doni.simling.databinding.ActivityAddIncomeBinding
 import com.doni.simling.helper.Resource
 import com.doni.simling.helper.setupCurrencyFormatting
 import com.doni.simling.models.connections.responses.CreateFundResponse
-import com.doni.simling.viewmodels.AddFundViewModel
+import com.doni.simling.viewmodels.FundViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +36,7 @@ class AddIncomeActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddIncomeBinding
 
     private var receiptImagePath: String? = null
-    private val viewModel: AddFundViewModel by viewModels()
+    private val viewModel: FundViewModel by viewModels()
 
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()

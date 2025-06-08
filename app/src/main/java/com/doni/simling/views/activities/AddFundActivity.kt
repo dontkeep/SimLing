@@ -16,7 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.doni.simling.databinding.ActivityAddFundBinding
 import com.doni.simling.helper.Resource
 import com.doni.simling.models.connections.responses.CreateFundResponse
-import com.doni.simling.viewmodels.AddFundViewModel
+import com.doni.simling.viewmodels.FundViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
@@ -36,7 +36,7 @@ class AddFundActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddFundBinding
     private var receiptImagePath: String? = null
 
-    private val viewModel: AddFundViewModel by viewModels()
+    private val viewModel: FundViewModel by viewModels()
 
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()

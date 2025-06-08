@@ -10,6 +10,8 @@ import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
+import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
@@ -142,4 +144,60 @@ class DataRepositories @Inject constructor(
         }
     }
 
+    fun getAllFunds(
+        month: String,
+        year: String
+    ): Flow<Resource<List<DataItemFunds>>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getAllFunds(
+                token = "Bearer $token",
+                month = month,
+                year = year
+            )
+            if (response.isNotEmpty()) {
+                emit(Resource.Success<List<DataItemFunds>>(response))
+            } else {
+                emit(Resource.Error("No funds found"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getAllIncome(
+        month: String,
+        year: String
+    ): Flow<Resource<List<DataItemFunds>>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+            val response = apiServices.getAllIncome(
+                token = "Bearer $token",
+                month = month,
+                year = year
+            )
+
+            val data = response.data?.filterNotNull() ?: emptyList()
+
+            if (data.isNotEmpty()) {
+                emit(Resource.Success<List<DataItemFunds>>(data))
+            } else {
+                emit(Resource.Error("No funds found"))
+            }
+        }
+        catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
 }

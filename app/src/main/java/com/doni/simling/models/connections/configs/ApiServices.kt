@@ -4,6 +4,8 @@ import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
+import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
 import okhttp3.MultipartBody
@@ -148,7 +150,12 @@ interface ApiServices {
         @Header("Authorization") token: String,
         @Query("month") month: String,
         @Query("year") year: String
-    ): List<CreateUserResponse> //update this to the correct response type
+    ): List<DataItemFunds> //update this to the correct response type
 
-
+    @GET("/api/funds-income")
+    suspend fun getAllIncome(
+        @Header("Authorization") token: String,
+        @Query("month") month: String,
+        @Query("year") year: String
+    ): GetAllFundsResponse
 }
