@@ -45,10 +45,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tvTitleAddress" />
 
         <TextView
-            android:id="@+id/tvDate"
+            android:id="@+id/tvDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor sit amet..."
+            android:text="Februari"
             app:layout_constraintBottom_toBottomOf="@+id/tvTitleDate"
             app:layout_constraintStart_toEndOf="@+id/tvTitleDate"
             app:layout_constraintTop_toTopOf="@+id/tvTitleDate" />
