@@ -10,32 +10,33 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.doni.simling.databinding.ActivityAddFundBinding
+import com.doni.simling.R
+import com.doni.simling.databinding.ActivityAddIncomeBinding
 import com.doni.simling.helper.Resource
+import com.doni.simling.helper.setupCurrencyFormatting
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.viewmodels.AddFundViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.graphics.toColorInt
-import com.doni.simling.helper.setupCurrencyFormatting
-import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddFundActivity : AppCompatActivity() {
+class AddIncomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAddFundBinding
+    lateinit var binding: ActivityAddIncomeBinding
+
     private var receiptImagePath: String? = null
-
     private val viewModel: AddFundViewModel by viewModels()
 
     private val launcherGallery = registerForActivityResult(
@@ -52,7 +53,7 @@ class AddFundActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityAddFundBinding.inflate(layoutInflater)
+        binding = ActivityAddIncomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -63,7 +64,6 @@ class AddFundActivity : AppCompatActivity() {
 
         binding.cardImage.setOnClickListener {
             openGallery()
-            Log.d("AddFundActivity", "Image Clicked")
         }
 
         binding.saveBtn.setOnClickListener {
@@ -74,22 +74,22 @@ class AddFundActivity : AppCompatActivity() {
     private fun handleSaveButtonClick() {
         lifecycleScope.launch {
             val amountText = binding.textFieldTotal.editText?.text?.toString() ?: ""
-            val cleanString = amountText.replace("[Rp,.\\s]".toRegex(), "")
 
+            val cleanString = amountText.replace("[Rp,.\\s]".toRegex(), "")
             if (cleanString.isEmpty()) {
                 Toast.makeText(
-                    this@AddFundActivity,
+                    this@AddIncomeActivity,
                     "Jumlah tidak boleh kosong",
                     Toast.LENGTH_SHORT
                 ).show()
                 return@launch
             }
 
-            val description = binding.textFieldDesc.editText?.text?.toString()
-            if (description.isNullOrEmpty()) {
+            val address = binding.textFieldAddress.editText?.text?.toString()
+            if (address.isNullOrEmpty()) {
                 Toast.makeText(
-                    this@AddFundActivity,
-                    "Deskripsi tidak boleh kosong",
+                    this@AddIncomeActivity,
+                    "Blok tidak boleh kosong",
                     Toast.LENGTH_SHORT
                 ).show()
                 return@launch
@@ -97,7 +97,7 @@ class AddFundActivity : AppCompatActivity() {
 
             if (receiptImagePath == null) {
                 Toast.makeText(
-                    this@AddFundActivity,
+                    this@AddIncomeActivity,
                     "Harap pilih gambar struk",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -105,17 +105,17 @@ class AddFundActivity : AppCompatActivity() {
             }
 
             val amountRequestBody = createRequestBody(cleanString)
-            val descriptionRequestBody = createRequestBody(description)
-            val isIncomeRequestBody = createRequestBody("false")
+            val descriptionRequestBody = createRequestBody("")
+            val isIncomeRequestBody = createRequestBody("true")
             val statusRequestBody = createRequestBody("Pending")
-            val blockRequestBody = createRequestBody("")
+            val blockRequestBody = createRequestBody(address)
 
             receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
             val receiptImagePart = createImagePart("image", receiptImagePath)
 
             if (receiptImagePart == null) {
                 Toast.makeText(
-                    this@AddFundActivity,
+                    this@AddIncomeActivity,
                     "Gagal memproses gambar",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -182,8 +182,8 @@ class AddFundActivity : AppCompatActivity() {
             is Resource.Loading -> {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.saveBtn.isEnabled = false
-                binding.textFieldDesc.isEnabled = false
                 binding.textFieldTotal.isEnabled = false
+                binding.textFieldAddress.isEnabled = false
                 binding.root.foreground = "#80000000".toColorInt().toDrawable()
             }
 
@@ -197,7 +197,6 @@ class AddFundActivity : AppCompatActivity() {
             is Resource.Error -> {
                 resetUIState()
                 binding.progressBar.visibility = View.GONE
-                Log.d("CreateListActivity", "Error: ${resource.message}")
                 Toast.makeText(this, "Error ${resource.message}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -205,9 +204,8 @@ class AddFundActivity : AppCompatActivity() {
 
     private fun resetUIState() {
         binding.progressBar.visibility = View.GONE
-        binding.saveBtn.isEnabled = true
-        binding.textFieldDesc.isEnabled = true
         binding.textFieldTotal.isEnabled = true
+        binding.textFieldAddress.isEnabled = true
         binding.root.foreground = null
     }
 }

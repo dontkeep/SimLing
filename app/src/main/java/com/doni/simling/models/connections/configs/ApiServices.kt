@@ -2,6 +2,7 @@ package com.doni.simling.models.connections.configs
 
 import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
+import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
@@ -10,7 +11,6 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -20,14 +20,13 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 interface ApiServices {
     @POST("/login")
     suspend fun login(
         @Body loginRequest: LoginRequest
     ): LoginResponse
 
-    @POST("/logout")
+    @POST("/api/logout")
     suspend fun logout(
         @Header("Authorization") token: String
     ): LogoutResponse
@@ -92,9 +91,9 @@ interface ApiServices {
         @Part("description") description: RequestBody,
         @Part("is_income") isIncome: RequestBody,
         @Part("status") status: RequestBody,
-        @Part("block") block: RequestBody,
-        @Part images: MultipartBody.Part // for 1 files, wrap with list if you want to upload multiple files
-    ): Response<CreateUserResponse>
+        @Part image: MultipartBody.Part,
+        @Part("block") block: RequestBody?
+    ): Response<CreateFundResponse>
 
     @PUT("/api/funds/{id}/reject")
     suspend fun rejectFund(
