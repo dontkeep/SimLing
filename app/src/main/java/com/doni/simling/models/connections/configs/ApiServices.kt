@@ -156,6 +156,8 @@ interface ApiServices {
     suspend fun getAllIncome(
         @Header("Authorization") token: String,
         @Query("month") month: String,
-        @Query("year") year: String
+        @Query("year") year: String,
+        @Query("page") page: Int? = null,
+        @Query("limit") limit: Int? = null
     ): GetAllFundsResponse
 }

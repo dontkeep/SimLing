@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.doni.simling.helper.Resource
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
@@ -22,9 +24,6 @@ class FundViewModel @Inject constructor(
 
     private val _imageUri = MutableLiveData<String>()
     val imageUri: LiveData<String> get() = _imageUri
-
-    private val _fundResponse = MutableLiveData<Resource<List<DataItemFunds>>>()
-    val fundResponse: LiveData<Resource<List<DataItemFunds>>> get() = _fundResponse
 
     fun addFund(
         amount: RequestBody,
@@ -46,15 +45,7 @@ class FundViewModel @Inject constructor(
         _imageUri.value = path
     }
 
-    fun getAllIncome(
-        month: String,
-        year: String
-    ) {
-        viewModelScope.launch {
-            repository.getAllIncome(month = month, year = year)
-                .collect { resource ->
-                    _fundResponse.value = resource
-                }
-        }
+    fun getAllIncomePaging(month: String, year: String): Flow<PagingData<DataItemFunds>> {
+        return repository.getIncomeFunds(month, year).cachedIn(viewModelScope)
     }
 }

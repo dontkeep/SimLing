@@ -1,17 +1,17 @@
 package com.doni.simling.models.repositories
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingData
 import com.doni.simling.helper.Resource
 import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.helper.manager.TokenManager
 import com.doni.simling.models.connections.configs.ApiServices
-import com.doni.simling.models.connections.requests.FamilyMembers
 import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
-import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
@@ -171,33 +171,16 @@ class DataRepositories @Inject constructor(
         }
     }
 
-    fun getAllIncome(
+    fun getIncomeFunds(
         month: String,
         year: String
-    ): Flow<Resource<List<DataItemFunds>>> = flow {
-        emit(Resource.Loading())
-        try {
-            val token = tokenManager.getToken()
-            if (token.isNullOrEmpty()) {
-                emit(Resource.Error("No token found"))
-                return@flow
+    ): Flow<PagingData<DataItemFunds>> {
+        val token = tokenManager.getToken()
+        return Pager(
+            config = androidx.paging.PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                IncomePagingSource(apiServices, token, month, year, 10)
             }
-            val response = apiServices.getAllIncome(
-                token = "Bearer $token",
-                month = month,
-                year = year
-            )
-
-            val data = response.data?.filterNotNull() ?: emptyList()
-
-            if (data.isNotEmpty()) {
-                emit(Resource.Success<List<DataItemFunds>>(data))
-            } else {
-                emit(Resource.Error("No funds found"))
-            }
-        }
-        catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "An error occurred"))
-        }
+        ).flow
     }
 }

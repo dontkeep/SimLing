@@ -72,7 +72,6 @@
             app:layout_constraintStart_toEndOf="@+id/tvTitleAmount"
             app:layout_constraintTop_toTopOf="@+id/tvTitleAmount" />
 
-
         <Button
             android:id="@+id/acceptBtn"
             style="?attr/materialIconButtonFilledStyle"

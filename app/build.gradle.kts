@@ -96,7 +96,7 @@ dependencies {
     implementation(libs.smoothbottombar)
 
     implementation(libs.logging.interceptor)
-
+    implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

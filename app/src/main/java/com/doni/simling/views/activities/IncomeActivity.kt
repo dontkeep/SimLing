@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.doni.simling.R
 import com.doni.simling.databinding.ActivityIncomeBinding
@@ -22,6 +23,7 @@ import com.doni.simling.helper.manager.RoleManager.Companion.ROLE_WARGA
 import com.doni.simling.viewmodels.FundViewModel
 import com.doni.simling.views.adapters.FundsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,7 +49,6 @@ class IncomeActivity : AppCompatActivity() {
         }
 
         setupRecyclerView()
-        observeViewModel()
         setupRoleSpecificUI()
 
         binding.floatingActionButton.setOnClickListener {
@@ -58,7 +59,8 @@ class IncomeActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         val currentMonth = String.format("%02d", calendar.get(Calendar.MONTH) + 1) // MONTH is 0-indexed
         val currentYear = calendar.get(Calendar.YEAR).toString()
-        fundViewModel.getAllIncome(currentMonth, currentYear)
+
+        observeViewModel(currentMonth, currentYear)
     }
 
     private fun setupRecyclerView() {
@@ -69,27 +71,12 @@ class IncomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeViewModel() {
-        fundViewModel.fundResponse.observe(this, Observer { response ->
-            when (response) {
-                is Resource.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-                is Resource.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    response.data.let {
-                        fundAdapter.submitList(it)
-                        if (it?.isEmpty() == true) {
-                            Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-                is Resource.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
-                }
+    private fun observeViewModel(month: String, year: String) {
+        lifecycleScope.launch {
+            fundViewModel.getAllIncomePaging(month, year).collect {
+                fundAdapter.submitData(it)
             }
-        })
+        }
     }
 
     private fun setupRoleSpecificUI() {

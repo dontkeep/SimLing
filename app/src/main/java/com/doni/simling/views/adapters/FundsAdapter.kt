@@ -2,6 +2,7 @@ package com.doni.simling.views.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Locale
 
-class FundsAdapter: ListAdapter<DataItemFunds, FundsAdapter.ViewHolder>(DIFF_CALLBACK) {
+class FundsAdapter: PagingDataAdapter<DataItemFunds, FundsAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -21,8 +22,7 @@ class FundsAdapter: ListAdapter<DataItemFunds, FundsAdapter.ViewHolder>(DIFF_CAL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val fundItem = getItem(position)
-        holder.bind(fundItem)
+        getItem(position)?.let { holder.bind(it) }
     }
 
     inner class ViewHolder(private val binding: ItemFundBinding): RecyclerView.ViewHolder(binding.root) {
