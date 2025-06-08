@@ -18,6 +18,7 @@ import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.helper.manager.TokenManager
 import com.doni.simling.viewmodels.LogoutViewModel
 import com.doni.simling.views.activities.AddFamilyActivity
+import com.doni.simling.views.activities.CameraActivity
 import com.doni.simling.views.activities.FundsActivity
 import com.doni.simling.views.activities.IncomeActivity
 import com.doni.simling.views.activities.LoginActivity
@@ -82,6 +83,11 @@ class HomeFragment : Fragment() {
         binding.logoutBtn.setOnClickListener {
             viewModel.logout()
             observeLogoutState()
+        }
+
+        binding.btnScan.setOnClickListener {
+            val intent = Intent(requireContext(), CameraActivity::class.java)
+            startActivity(intent)
         }
     }
 
