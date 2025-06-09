@@ -6,6 +6,7 @@ import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
+import com.doni.simling.models.connections.responses.GetAllUserResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
@@ -42,8 +43,10 @@ interface ApiServices {
 
     @GET("/api/users")
     suspend fun getUsers(
-        @Header("Authorization") token: String
-    ): List<CreateUserResponse> //update this to the correct response type
+        @Header("Authorization") token: String,
+        @Query("page") page: Int? = null,
+        @Query("limit") limit: Int? = null
+    ): GetAllUserResponse
 
     @PUT("/api/users/{id}")
     suspend fun updateUser(

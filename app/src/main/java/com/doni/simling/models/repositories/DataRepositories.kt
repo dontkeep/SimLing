@@ -12,6 +12,7 @@ import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.DataItemUser
 import com.doni.simling.models.connections.responses.HomeResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -167,6 +168,16 @@ class DataRepositories @Inject constructor(
             config = androidx.paging.PagingConfig(pageSize = 10),
             pagingSourceFactory = {
                 IncomePagingSource(apiServices, token, month, year, 10)
+            }
+        ).flow
+    }
+
+    fun getFunds(): Flow<PagingData<DataItemUser>> {
+        val token = tokenManager.getToken()
+        return Pager(
+            config = androidx.paging.PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                UserPagingSource(apiServices, token, 10)
             }
         ).flow
     }
