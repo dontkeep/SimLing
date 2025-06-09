@@ -145,34 +145,7 @@ class DataRepositories @Inject constructor(
         }
     }
 
-    fun getAllFunds(
-        month: String,
-        year: String
-    ): Flow<Resource<List<DataItemFunds>>> = flow {
-        emit(Resource.Loading())
-        try {
-            val token = tokenManager.getToken()
-            if (token.isNullOrEmpty()) {
-                emit(Resource.Error("No token found"))
-                return@flow
-            }
-
-            val response = apiServices.getAllFunds(
-                token = "Bearer $token",
-                month = month,
-                year = year
-            )
-            if (response.isNotEmpty()) {
-                emit(Resource.Success<List<DataItemFunds>>(response))
-            } else {
-                emit(Resource.Error("No funds found"))
-            }
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "An error occurred"))
-        }
-    }
-
-    fun getIncomeFunds(
+    fun getIncome(
         month: String,
         year: String
     ): Flow<PagingData<DataItemFunds>> {
@@ -184,6 +157,20 @@ class DataRepositories @Inject constructor(
             }
         ).flow
     }
+
+    fun getFunds(
+        month: String,
+        year: String
+    ): Flow<PagingData<DataItemFunds>> {
+        val token = tokenManager.getToken()
+        return Pager(
+            config = androidx.paging.PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                IncomePagingSource(apiServices, token, month, year, 10)
+            }
+        ).flow
+    }
+
     fun getHome(): Flow<Resource<HomeResponse>> = flow {
         emit(Resource.Loading())
         try {

@@ -12,7 +12,6 @@ import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.repositories.DataRepositories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
@@ -46,6 +45,10 @@ class FundViewModel @Inject constructor(
     }
 
     fun getAllIncomePaging(month: String, year: String): Flow<PagingData<DataItemFunds>> {
-        return repository.getIncomeFunds(month, year).cachedIn(viewModelScope)
+        return repository.getIncome(month, year).cachedIn(viewModelScope)
+    }
+
+    fun getAllFundPaging(month: String, year: String): Flow<PagingData<DataItemFunds>> {
+        return repository.getFunds(month, year).cachedIn(viewModelScope)
     }
 }

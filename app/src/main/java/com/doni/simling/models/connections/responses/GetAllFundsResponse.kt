@@ -1,10 +1,7 @@
 package com.doni.simling.models.connections.responses
 
-import kotlinx.parcelize.Parcelize
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-@Parcelize
 data class GetAllFundsResponse(
 
 	@field:SerializedName("total")
@@ -21,9 +18,8 @@ data class GetAllFundsResponse(
 
 	@field:SerializedName("page")
 	val page: Int? = null
-) : Parcelable
+)
 
-@Parcelize
 data class DataItemFunds(
 
 	@field:SerializedName("image")
@@ -34,6 +30,9 @@ data class DataItemFunds(
 
 	@field:SerializedName("user_name")
 	val userName: String? = null,
+
+	@field:SerializedName("description")
+	val description: String? = null,
 
 	@field:SerializedName("created_at")
 	val createdAt: String? = null,
@@ -49,4 +48,4 @@ data class DataItemFunds(
 
 	@field:SerializedName("status")
 	val status: String? = null
-) : Parcelable
+)
