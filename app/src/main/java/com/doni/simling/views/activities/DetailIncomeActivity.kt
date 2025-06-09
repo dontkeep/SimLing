@@ -15,15 +15,21 @@ import com.doni.simling.databinding.ActivityDetailIncomeBinding
 import com.doni.simling.helper.DateHelper.formatDate
 import com.doni.simling.helper.Resource
 import com.doni.simling.helper.formatCurrency
+import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.viewmodels.FundViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailIncomeActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var roleManager: RoleManager
+
     private lateinit var binding: ActivityDetailIncomeBinding
     private val fundViewModel: FundViewModel by viewModels()
     private var fundId: Int = -1
@@ -38,6 +44,8 @@ class DetailIncomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        binding.acceptBtn.visibility = View.GONE
+        binding.rejectBtn.visibility = View.GONE
 
         fundId = intent.getIntExtra("FUND_ID", -1)
         if (fundId == -1) {
@@ -47,6 +55,7 @@ class DetailIncomeActivity : AppCompatActivity() {
 
         setupObservers(fundId)
         setupListeners()
+        observeActions()
 
         fundViewModel.getFundIncomeDetail(fundId)
     }
@@ -73,21 +82,25 @@ class DetailIncomeActivity : AppCompatActivity() {
                                     .into(binding.ivDetailPhoto)
                             }
 
-                            when(fund.status) {
-                                "Pending" -> {
-                                    binding.acceptBtn.visibility = View.VISIBLE
-                                    binding.rejectBtn.visibility = View.VISIBLE
-                                    binding.tvPending.visibility = View.VISIBLE
+                            if (roleManager.getRole() == RoleManager.ROLE_ADMIN) {
+                                when (fund.status) {
+                                    "Pending" -> {
+                                        binding.acceptBtn.visibility = View.VISIBLE
+                                        binding.rejectBtn.visibility = View.VISIBLE
+                                        binding.tvPending.visibility = View.VISIBLE
+                                    }
+                                    "Accepted" -> {
+                                        binding.tvAccepted.visibility = View.VISIBLE
+                                    }
+                                    "Rejected" -> {
+                                        binding.tvRejected.visibility = View.VISIBLE
+                                    }
                                 }
-                                "Accepted" -> {
-                                    binding.acceptBtn.visibility = View.GONE
-                                    binding.rejectBtn.visibility = View.GONE
-                                    binding.tvAccepted.visibility = View.VISIBLE
-                                }
-                                "Rejected" -> {
-                                    binding.rejectBtn.visibility = View.GONE
-                                    binding.acceptBtn.visibility = View.GONE
-                                    binding.tvRejected.visibility = View.VISIBLE
+                            } else {
+                                when (fund.status) {
+                                    "Pending" -> binding.tvPending.visibility = View.VISIBLE
+                                    "Accepted" -> binding.tvAccepted.visibility = View.VISIBLE
+                                    "Rejected" -> binding.tvRejected.visibility = View.VISIBLE
                                 }
                             }
                         }
@@ -107,56 +120,68 @@ class DetailIncomeActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.acceptBtn.setOnClickListener {
+            fundViewModel.acceptIncome(fundId)
+        }
+
+        binding.rejectBtn.setOnClickListener {
+            fundViewModel.rejectIncome(fundId)
+        }
+    }
+
+
+    private fun observeActions() {
         lifecycleScope.launch {
-            binding.acceptBtn.setOnClickListener {
-                fundViewModel.acceptIncome(fundId)
-            }
-
-            binding.rejectBtn.setOnClickListener {
-                fundViewModel.rejectIncome(fundId)
-            }
-
-            fundViewModel.acceptState.collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-
-                    is Resource.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this@DetailIncomeActivity, "Pembayaran diterima", Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
-
-                    is Resource.Error -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(
-                            this@DetailIncomeActivity,
-                            resource.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+            launch {
+                fundViewModel.acceptState.collect { resource ->
+                    when (resource) {
+                        is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                        is Resource.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                this@DetailIncomeActivity,
+                                "Pembayaran diterima",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
+                        }
+                        is Resource.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                this@DetailIncomeActivity,
+                                resource.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
 
-            fundViewModel.rejectState.collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-
-                    is Resource.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this@DetailIncomeActivity, "Pembayaran ditolak", Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
-
-                    is Resource.Error -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this@DetailIncomeActivity, resource.message, Toast.LENGTH_SHORT).show()
+            launch {
+                fundViewModel.rejectState.collect { resource ->
+                    when (resource) {
+                        is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                        is Resource.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                this@DetailIncomeActivity,
+                                "Pembayaran ditolak",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
+                        }
+                        is Resource.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                this@DetailIncomeActivity,
+                                resource.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
         }
     }
+
 }

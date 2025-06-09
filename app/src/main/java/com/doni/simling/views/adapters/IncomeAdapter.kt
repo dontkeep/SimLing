@@ -1,6 +1,7 @@
 package com.doni.simling.views.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -31,10 +32,23 @@ class IncomeAdapter(
             binding.tvMonth.text = formatDate(incomeItem.createdAt)
             binding.tvBayar.text = formatCurrency(incomeItem.amount ?: 0)
 
-            // Tambahkan click listener
             binding.root.setOnClickListener {
                 incomeItem.id?.let { id ->
                     onItemClick(incomeItem)
+                }
+            }
+
+            when (incomeItem.status) {
+                "Pending" -> {
+                    binding.tvPending.visibility = View.VISIBLE
+                }
+
+                "Accepted" -> {
+                    binding.tvAccepted.visibility = View.VISIBLE
+                }
+
+                "Rejected" -> {
+                    binding.tvRejected.visibility = View.VISIBLE
                 }
             }
         }
