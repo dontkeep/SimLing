@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.doni.simling.helper.Resource
+import com.doni.simling.models.connections.responses.AcceptIncomeResponse
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
-import com.doni.simling.models.connections.responses.GetFundDetailResponse
+import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
+import com.doni.simling.models.connections.responses.RejectIncomeResponse
 import com.doni.simling.models.repositories.DataRepositories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -28,14 +30,14 @@ class FundViewModel @Inject constructor(
     private val _imageUri = MutableLiveData<String>()
     val imageUri: LiveData<String> get() = _imageUri
 
-    private val _fundDetail = MutableStateFlow<Resource<GetFundDetailResponse>>(Resource.Loading())
-    val fundDetail: StateFlow<Resource<GetFundDetailResponse>> = _fundDetail
+    private val _fundDetail = MutableStateFlow<Resource<GetFundIncomeDetailResponse>>(Resource.Loading())
+    val fundDetail: StateFlow<Resource<GetFundIncomeDetailResponse>> = _fundDetail
 
-    private val _acceptState = MutableStateFlow<Resource<Boolean>>(Resource.Loading())
-    val acceptState: StateFlow<Resource<Boolean>> = _acceptState
+    private val _acceptState = MutableStateFlow<Resource<AcceptIncomeResponse>>(Resource.Loading())
+    val acceptState: StateFlow<Resource<AcceptIncomeResponse>> = _acceptState
 
-    private val _rejectState = MutableStateFlow<Resource<Boolean>>(Resource.Loading())
-    val rejectState: StateFlow<Resource<Boolean>> = _rejectState
+    private val _rejectState = MutableStateFlow<Resource<RejectIncomeResponse>>(Resource.Loading())
+    val rejectState: StateFlow<Resource<RejectIncomeResponse>> = _rejectState
 
     fun addFund(
         amount: RequestBody,
@@ -73,19 +75,19 @@ class FundViewModel @Inject constructor(
         }
     }
 
-//    fun acceptFund(id: Int) {
-//        viewModelScope.launch {
-//            repository.acceptFund(id).collect { resource ->
-//                _acceptState.value = resource
-//            }
-//        }
-//    }
+    fun acceptIncome(id: Int) {
+        viewModelScope.launch {
+            repository.acceptIncome(id).collect { resource ->
+                _acceptState.value = resource
+            }
+        }
+    }
 
-//    fun rejectFund(id: Int) {
-//        viewModelScope.launch {
-//            repository.rejectFund(id).collect { resource ->
-//                _rejectState.value = resource
-//            }
-//        }
-//    }
+    fun rejectIncome(id: Int) {
+        viewModelScope.launch {
+            repository.rejectIncome(id).collect { resource ->
+                _rejectState.value = resource
+            }
+        }
+    }
 }
