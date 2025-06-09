@@ -9,10 +9,8 @@ import com.doni.simling.databinding.ItemIncomeBinding
 import com.doni.simling.helper.DateHelper.formatDate
 import com.doni.simling.helper.formatCurrency
 import com.doni.simling.models.connections.responses.DataItemFunds
-import java.text.SimpleDateFormat
-import java.util.Locale
 
-class FundsAdapter: PagingDataAdapter<DataItemFunds, FundsAdapter.ViewHolder>(DIFF_CALLBACK) {
+class IncomeAdapter: PagingDataAdapter<DataItemFunds, IncomeAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
