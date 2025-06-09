@@ -40,15 +40,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Periode: "
+            android:text="Tanggal: "
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitleAddress" />
 
         <TextView
-            android:id="@+id/tvDesc"
+            android:id="@+id/tvMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Februari"
+            android:text="1 Februari 2025"
             app:layout_constraintBottom_toBottomOf="@+id/tvTitleDate"
             app:layout_constraintStart_toEndOf="@+id/tvTitleDate"
             app:layout_constraintTop_toTopOf="@+id/tvTitleDate" />
