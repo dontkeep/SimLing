@@ -10,12 +10,12 @@ import com.doni.simling.helper.DateHelper.formatDate
 import com.doni.simling.helper.formatCurrency
 import com.doni.simling.models.connections.responses.DataItemFunds
 
-class IncomeAdapter: PagingDataAdapter<DataItemFunds, IncomeAdapter.ViewHolder>(DIFF_CALLBACK) {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-       val binding = ItemIncomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+class IncomeAdapter(
+    private val onItemClick: (DataItemFunds) -> Unit
+) : PagingDataAdapter<DataItemFunds, IncomeAdapter.ViewHolder>(DIFF_CALLBACK) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemIncomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -23,12 +23,20 @@ class IncomeAdapter: PagingDataAdapter<DataItemFunds, IncomeAdapter.ViewHolder>(
         getItem(position)?.let { holder.bind(it) }
     }
 
-    inner class ViewHolder(private val binding: ItemIncomeBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(incomeItem: DataItemFunds) {
+    inner class ViewHolder(private val binding: ItemIncomeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
+        fun bind(incomeItem: DataItemFunds) {
             binding.tvAddress.text = incomeItem.block
-            binding.tvMonth.text= formatDate(incomeItem.createdAt)
+            binding.tvMonth.text = formatDate(incomeItem.createdAt)
             binding.tvBayar.text = formatCurrency(incomeItem.amount ?: 0)
+
+            // Tambahkan click listener
+            binding.root.setOnClickListener {
+                incomeItem.id?.let { id ->
+                    onItemClick(incomeItem)
+                }
+            }
         }
     }
 

@@ -9,9 +9,13 @@ import androidx.paging.cachedIn
 import com.doni.simling.helper.Resource
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.GetFundDetailResponse
 import com.doni.simling.models.repositories.DataRepositories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
@@ -23,6 +27,15 @@ class FundViewModel @Inject constructor(
 
     private val _imageUri = MutableLiveData<String>()
     val imageUri: LiveData<String> get() = _imageUri
+
+    private val _fundDetail = MutableStateFlow<Resource<GetFundDetailResponse>>(Resource.Loading())
+    val fundDetail: StateFlow<Resource<GetFundDetailResponse>> = _fundDetail
+
+    private val _acceptState = MutableStateFlow<Resource<Boolean>>(Resource.Loading())
+    val acceptState: StateFlow<Resource<Boolean>> = _acceptState
+
+    private val _rejectState = MutableStateFlow<Resource<Boolean>>(Resource.Loading())
+    val rejectState: StateFlow<Resource<Boolean>> = _rejectState
 
     fun addFund(
         amount: RequestBody,
@@ -51,4 +64,28 @@ class FundViewModel @Inject constructor(
     fun getAllFundPaging(month: String, year: String): Flow<PagingData<DataItemFunds>> {
         return repository.getFunds(month, year).cachedIn(viewModelScope)
     }
+
+    fun getFundIncomeDetail(id: Int) {
+        viewModelScope.launch {
+            repository.getFundIncomeDetail(id).collect { resource ->
+                _fundDetail.value = resource
+            }
+        }
+    }
+
+//    fun acceptFund(id: Int) {
+//        viewModelScope.launch {
+//            repository.acceptFund(id).collect { resource ->
+//                _acceptState.value = resource
+//            }
+//        }
+//    }
+
+//    fun rejectFund(id: Int) {
+//        viewModelScope.launch {
+//            repository.rejectFund(id).collect { resource ->
+//                _rejectState.value = resource
+//            }
+//        }
+//    }
 }
