@@ -39,5 +39,5 @@ fun formatRupiah(amount: Double): String {
 }
 
 fun formatCurrency(amount: Int): String {
-    return "Rp. ${NumberFormat.getNumberInstance(Locale.US).format(amount)}"
+    return "Rp. ${NumberFormat.getNumberInstance(Locale("in", "ID")).format(amount)}"
 }
