@@ -12,6 +12,7 @@ import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.HomeResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
@@ -182,5 +183,22 @@ class DataRepositories @Inject constructor(
                 IncomePagingSource(apiServices, token, month, year, 10)
             }
         ).flow
+    }
+    fun getHome(): Flow<Resource<HomeResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getHomeData(
+                token = "Bearer $token"
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
     }
 }

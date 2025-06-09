@@ -32,9 +32,12 @@ fun setupCurrencyFormatting(editText: TextInputEditText) {
     })
 }
 
-private fun formatRupiah(amount: Double): String {
+fun formatRupiah(amount: Double): String {
     val localeID = Locale("in", "ID")
     val numberFormat = NumberFormat.getCurrencyInstance(localeID)
     return numberFormat.format(amount).replace("Rp", "Rp ").replace(",00", "")
 }
 
+fun formatCurrency(amount: Int): String {
+    return "Rp. ${NumberFormat.getNumberInstance(Locale.US).format(amount)}"
+}

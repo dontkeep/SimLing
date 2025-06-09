@@ -14,8 +14,10 @@ import androidx.fragment.app.viewModels
 import com.doni.simling.databinding.FragmentHomeBinding
 import com.doni.simling.helper.DateHelper
 import com.doni.simling.helper.Resource
+import com.doni.simling.helper.formatCurrency
 import com.doni.simling.helper.manager.RoleManager
-import com.doni.simling.helper.manager.TokenManager
+import com.doni.simling.models.connections.responses.HomeResponse
+import com.doni.simling.viewmodels.HomeViewModel
 import com.doni.simling.viewmodels.LogoutViewModel
 import com.doni.simling.views.activities.AddFamilyActivity
 import com.doni.simling.views.activities.CameraActivity
@@ -34,6 +36,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: LogoutViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +50,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvDate.text = DateHelper.getCurrentFormattedDate()
+
+        homeViewModel.getHomeData()
+        observeHomeData()
 
         val currentRole = roleManager.getRole()
         Log.d("HomeFragment", "Current Role: $currentRole")
@@ -105,17 +111,48 @@ class HomeFragment : Fragment() {
                     binding.cardMenuSecurity.isEnabled = false
                     binding.root.foreground = "#80000000".toColorInt().toDrawable()
                 }
+
                 is Resource.Success -> {
                     binding.progressIndicator.visibility = View.GONE
                     Toast.makeText(requireContext(), "Logout successful", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(requireContext(), LoginActivity::class.java))
                     requireActivity().finish()
                 }
+
                 is Resource.Error -> {
                     binding.progressIndicator.visibility = View.GONE
                     Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun observeHomeData() {
+        homeViewModel.homeState.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    binding.progressIndicator.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    val data = resource.data
+                    binding.progressIndicator.visibility = View.GONE
+                    updateUI(data)
+                }
+                is Resource.Error -> {
+                    binding.progressIndicator.visibility = View.GONE
+                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun updateUI(data: HomeResponse?) {
+        data?.let {
+            binding.tvCurrentAmount.text = formatCurrency(it.currentCredit ?: 0)
+            binding.tvIncomePerMonth.text = formatCurrency(it.currentCredit ?: 0)
+            binding.tvFundsPerMonth.text = formatCurrency(it.totalExpense ?: 0)
+            binding.tvMemberAmount.text = "${it.totalUsers} Kepala Keluarga"
+            binding.tvNewMember.text = "${it.usersAddedThisMonth} Keluarga"
         }
     }
 

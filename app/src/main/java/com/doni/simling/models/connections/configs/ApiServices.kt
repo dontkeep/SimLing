@@ -6,6 +6,7 @@ import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
+import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
 import okhttp3.MultipartBody
@@ -73,10 +74,8 @@ interface ApiServices {
 
     @GET("/api/home")
     suspend fun getHomeData(
-        @Header("Authorization") token: String,
-        @Query("month") month: String,
-        @Query("year") year: String
-    ): CreateUserResponse //update this to the correct response type
+        @Header("Authorization") token: String
+    ): HomeResponse
 
     @GET("/api/funds-by-user")
     suspend fun getFundsByUser(
