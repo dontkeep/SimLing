@@ -95,6 +95,10 @@ dependencies {
     //Smooth Bottombar lib
     implementation(libs.smoothbottombar)
 
+    //Glide lib
+    implementation(libs.glide)
+
+
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.core.ktx)
