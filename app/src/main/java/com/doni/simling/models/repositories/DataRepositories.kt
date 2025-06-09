@@ -13,6 +13,7 @@ import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.connections.responses.DataItemUser
+import com.doni.simling.models.connections.responses.GetFundDetailResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -193,6 +194,25 @@ class DataRepositories @Inject constructor(
 
             val response = apiServices.getHomeData(
                 token = "Bearer $token"
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getFundIncomeDetail(id: Int): Flow<Resource<GetFundDetailResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getFundById(
+                token = "Bearer $token",
+                id = id
             )
             emit(Resource.Success(response))
         } catch (e: Exception) {

@@ -7,6 +7,7 @@ import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import com.doni.simling.models.connections.responses.GetAllUserResponse
+import com.doni.simling.models.connections.responses.GetFundDetailResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
@@ -144,8 +145,8 @@ interface ApiServices {
     @GET("/api/funds/{id}")
     suspend fun getFundById(
         @Header("Authorization") token: String,
-        @Path("id") id: String
-    ): CreateUserResponse //update this to the correct response type
+        @Path("id") id: Int
+    ): GetFundDetailResponse
 
     @GET("/api/funds")
     suspend fun getAllFunds(
