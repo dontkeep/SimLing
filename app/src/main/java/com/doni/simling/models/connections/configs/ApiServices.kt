@@ -2,15 +2,17 @@ package com.doni.simling.models.connections.configs
 
 import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
+import com.doni.simling.models.connections.responses.AcceptIncomeResponse
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import com.doni.simling.models.connections.responses.GetAllUserResponse
-import com.doni.simling.models.connections.responses.GetFundDetailResponse
+import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
+import com.doni.simling.models.connections.responses.RejectIncomeResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -101,21 +103,21 @@ interface ApiServices {
     ): Response<CreateFundResponse>
 
     @PUT("/api/funds/{id}/reject")
-    suspend fun rejectFund(
+    suspend fun rejectIncome(
         @Header("Authorization") token: String,
-        @Path("id") id: String
-    ): CreateUserResponse //update this to the correct response type
+        @Path("id") id: Int
+    ): RejectIncomeResponse
 
     @PUT("/api/funds/{id}/accept")
-    suspend fun acceptFund(
+    suspend fun acceptIncome(
         @Header("Authorization") token: String,
-        @Path("id") id: String
-    ): CreateUserResponse //update this to the correct response type
+        @Path("id") id: Int
+    ): AcceptIncomeResponse
 
     @DELETE("/api/funds/{id}")
     suspend fun deleteFund(
         @Header("Authorization") token: String,
-        @Path("id") id: String
+        @Path("id") id: Int
     ): CreateUserResponse //update this to the correct response type
 
     @GET("/api/security-records/by-user")
@@ -146,7 +148,7 @@ interface ApiServices {
     suspend fun getFundById(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ): GetFundDetailResponse
+    ): GetFundIncomeDetailResponse
 
     @GET("/api/funds")
     suspend fun getAllFunds(
