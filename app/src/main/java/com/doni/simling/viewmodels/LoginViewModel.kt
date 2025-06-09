@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doni.simling.helper.Resource
+import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.models.repositories.DataRepositories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: DataRepositories
+    private val repository: DataRepositories,
+    private val roleManager: RoleManager
 ): ViewModel() {
     private val _loginState = MutableLiveData<Resource<Boolean>>()
     val loginState: LiveData<Resource<Boolean>> get() = _loginState
@@ -37,5 +39,9 @@ class LoginViewModel @Inject constructor(
                 _loginState.value = Resource.Error(e.message ?: "Unknown error")
             }
         }
+    }
+
+    fun getRole(): Int? {
+        return roleManager.getRole()
     }
 }
