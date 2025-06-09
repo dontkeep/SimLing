@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.doni.simling.databinding.ActivityIncomeBinding
+import com.doni.simling.helper.DateHelper.getCurrentMonth
+import com.doni.simling.helper.DateHelper.getCurrentYear
 import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.helper.manager.RoleManager.Companion.ROLE_ADMIN
 import com.doni.simling.helper.manager.RoleManager.Companion.ROLE_WARGA
@@ -52,11 +54,7 @@ class IncomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val calendar = Calendar.getInstance()
-        val currentMonth = String.format("%02d", calendar.get(Calendar.MONTH) + 1) // MONTH is 0-indexed
-        val currentYear = calendar.get(Calendar.YEAR).toString()
-
-        observeViewModel(currentMonth, currentYear)
+        observeViewModel(getCurrentMonth(), getCurrentYear())
     }
 
     private fun setupRecyclerView() {

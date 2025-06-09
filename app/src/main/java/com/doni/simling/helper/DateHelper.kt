@@ -1,5 +1,6 @@
 package com.doni.simling.helper
 
+import android.icu.util.Calendar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,5 +26,20 @@ object DateHelper {
         } catch (e: Exception) {
             "-"
         }
+    }
+
+    fun getCurrentMonth(): String {
+        val calendar = Calendar.getInstance()
+        val currentMonth = String.format("%02d", calendar.get(Calendar.MONTH) + 1)
+
+        return currentMonth
+    }
+
+    fun getCurrentYear(): String {
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+
+        return currentYear.toString()
+
     }
 }
