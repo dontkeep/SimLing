@@ -86,7 +86,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvRole" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvMembers"
+                android:id="@+id/rvFunds"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:clipToPadding="false"
