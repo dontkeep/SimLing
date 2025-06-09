@@ -189,7 +189,7 @@ class AddIncomeActivity : AppCompatActivity() {
             is Resource.Success -> {
                 resetUIState()
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this, "Berhasil menambahkan pengeluaran", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Berhasil Membayar Kas", Toast.LENGTH_SHORT).show()
                 finish()
             }
 
