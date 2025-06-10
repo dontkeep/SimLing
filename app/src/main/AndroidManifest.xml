@@ -56,6 +56,9 @@
             android:exported="false" />
         <activity
             android:name=".views.DebugMENU"
+            android:exported="false" />
+        <activity
+            android:name=".views.activities.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
