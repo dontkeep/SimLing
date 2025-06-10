@@ -5,12 +5,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.doni.simling.R
 import com.doni.simling.databinding.ActivityDetailIncomeBinding
 import com.doni.simling.helper.DateHelper.formatDate
 import com.doni.simling.helper.Resource
@@ -19,9 +19,6 @@ import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.viewmodels.FundViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -121,14 +118,21 @@ class DetailIncomeActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.acceptBtn.setOnClickListener {
-            fundViewModel.acceptIncome(fundId)
+            showConfirmationDialog(
+                title = "Konfirmasi Penerimaan",
+                message = "Apakah Anda yakin ingin menerima pembayaran ini?",
+                positiveAction = { fundViewModel.acceptIncome(fundId) }
+            )
         }
 
         binding.rejectBtn.setOnClickListener {
-            fundViewModel.rejectIncome(fundId)
+            showConfirmationDialog(
+                title = "Konfirmasi Penolakan",
+                message = "Apakah Anda yakin ingin menolak pembayaran ini?",
+                positiveAction = { fundViewModel.rejectIncome(fundId) }
+            )
         }
     }
-
 
     private fun observeActions() {
         lifecycleScope.launch {
@@ -184,4 +188,18 @@ class DetailIncomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun showConfirmationDialog(
+        title: String,
+        message: String,
+        positiveAction: () -> Unit
+    ) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Ya") { _, _ ->
+                positiveAction()
+            }
+            .setNegativeButton("Tidak", null)
+            .show()
+    }
 }
