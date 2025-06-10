@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.doni.simling.databinding.ActivityFundsBinding
 import com.doni.simling.helper.DateHelper.getCurrentMonth
 import com.doni.simling.helper.DateHelper.getCurrentYear
+import com.doni.simling.helper.MonthYearPickerDialog
 import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.helper.manager.RoleManager.Companion.ROLE_ADMIN
 import com.doni.simling.helper.manager.RoleManager.Companion.ROLE_WARGA
@@ -33,6 +34,9 @@ class FundsActivity : AppCompatActivity() {
     private val fundViewModel: FundViewModel by viewModels()
     private lateinit var fundAdapter: FundAdapter
 
+    private var selectedMonth: String = getCurrentMonth()
+    private var selectedYear: String = getCurrentYear()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,6 +50,10 @@ class FundsActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupRoleSpecificUI()
+
+        binding.icCalendar.setOnClickListener {
+            showMonthYearPickerDialog()
+        }
 
         binding.floatingActionButton.setOnClickListener {
             val intent = Intent(this, AddFundActivity::class.java)
@@ -86,5 +94,16 @@ class FundsActivity : AppCompatActivity() {
                 binding.tvRole.visibility = View.GONE
             }
         }
+    }
+
+    private fun showMonthYearPickerDialog() {
+        val dialog = MonthYearPickerDialog(this) { month, year ->
+            selectedMonth = String.format("%02d", month + 1)
+            selectedYear = year.toString()
+
+            observeViewModel(selectedMonth, selectedYear)
+        }
+
+        dialog.show()
     }
 }
