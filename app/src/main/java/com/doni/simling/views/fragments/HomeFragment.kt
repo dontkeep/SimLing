@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.viewModels
@@ -87,14 +88,29 @@ class HomeFragment : Fragment() {
         }
 
         binding.logoutBtn.setOnClickListener {
-            viewModel.logout()
-            observeLogoutState()
+            showLogoutConfirmationDialog()
         }
 
         binding.btnScan.setOnClickListener {
             val intent = Intent(requireContext(), CameraActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Konfirmasi Logout")
+            .setMessage("Apakah Anda yakin ingin keluar?")
+            .setPositiveButton("Ya") { dialog, _ ->
+                dialog.dismiss()
+                viewModel.logout()
+                observeLogoutState()
+            }
+            .setNegativeButton("Tidak") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun observeLogoutState() {
