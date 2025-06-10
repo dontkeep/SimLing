@@ -53,6 +53,10 @@ class FundsActivity : AppCompatActivity() {
         }
 
         observeViewModel(getCurrentMonth(), getCurrentYear())
+
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setupRecyclerView() {

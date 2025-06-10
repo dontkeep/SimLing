@@ -68,6 +68,10 @@ class AddIncomeActivity : AppCompatActivity() {
         binding.saveBtn.setOnClickListener {
             handleSaveButtonClick()
         }
+
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     private fun handleSaveButtonClick() {

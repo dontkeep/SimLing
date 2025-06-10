@@ -55,6 +55,10 @@ class DetailIncomeActivity : AppCompatActivity() {
         observeActions()
 
         fundViewModel.getFundIncomeDetail(fundId)
+
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setupObservers(fundId: Int) {

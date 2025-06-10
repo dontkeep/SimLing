@@ -30,6 +30,18 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <Button
+                android:id="@+id/backBtn"
+                style="?attr/materialIconButtonFilledStyle"
+                android:backgroundTint="@color/green_pastel"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="8dp"
+                app:icon="@drawable/ic_back"
+                app:iconTint="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
@@ -165,12 +177,13 @@
 
             <Button
                 android:id="@+id/saveBtn"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                android:backgroundTint="@color/green_pastel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
                 android:text="Simpan"
-                android:textColor="@color/white"
-                app:cornerRadius="8dp"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

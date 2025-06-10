@@ -54,6 +54,10 @@ class IncomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
+
         observeViewModel(getCurrentMonth(), getCurrentYear())
     }
 
