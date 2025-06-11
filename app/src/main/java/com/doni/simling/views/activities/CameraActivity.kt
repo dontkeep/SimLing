@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import com.al.qrzen.scanner.BorderScanner
 import com.al.qrzen.scanner.CameraPermissionHandler
 import com.al.qrzen.scanner.PermissionDeniedMessage
+import com.al.qrzen.scanner.ZenScannerScreen
 
 class CameraActivity : AppCompatActivity() {
 
@@ -38,7 +39,7 @@ fun MainScreen() {
 
     when (hasCameraPermission) {
         true -> {
-            BorderScanner(
+            ZenScannerScreen(
                 modifier = Modifier.fillMaxSize(),
                 isScanningEnabled = true,
                 isFlashEnabled = true,
