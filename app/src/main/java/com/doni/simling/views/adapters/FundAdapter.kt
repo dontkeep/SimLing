@@ -4,20 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.doni.simling.databinding.ItemFundBinding
+import com.doni.simling.helper.DateHelper.formatDate
+import com.doni.simling.helper.formatCurrency
 import com.doni.simling.models.connections.responses.DataItemFunds
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.util.Locale
 
-class FundsAdapter: PagingDataAdapter<DataItemFunds, FundsAdapter.ViewHolder>(DIFF_CALLBACK) {
+class FundAdapter: PagingDataAdapter<DataItemFunds, FundAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-       val binding = ItemFundBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemFundBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -27,22 +25,9 @@ class FundsAdapter: PagingDataAdapter<DataItemFunds, FundsAdapter.ViewHolder>(DI
 
     inner class ViewHolder(private val binding: ItemFundBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(fundItem: DataItemFunds) {
-
             binding.tvBayar.text = fundItem.amount.toString()
             binding.tvDate.text = formatDate(fundItem.createdAt)
-            binding.tvDesc.text = fundItem.userName.toString()
-        }
-
-        private fun formatDate(dateString: String?): String {
-            if (dateString.isNullOrBlank()) return "-"
-            return try {
-                val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-                val formatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-                val date = parser.parse(dateString)
-                if (date != null) formatter.format(date) else "-"
-            } catch (e: Exception) {
-                "-"
-            }
+            binding.tvDesc.text = fundItem.description.toString()
         }
     }
 

@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -46,19 +46,31 @@ class LoginActivity : AppCompatActivity() {
                     binding.edPhoneNo.isEnabled = false
                     binding.edPassword.isEnabled = false
                 }
+
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    val intent = Intent(this, MainActivity::class.java)
+
+                    val role = loginViewModel.getRole()
+                    val intent = when (role) {
+                        3 -> Intent(this, SecurityActivity::class.java)
+                        else -> Intent(this, MainActivity::class.java)
+                    }
+
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
                 }
+
                 is Resource.Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.loginButton.isEnabled = true
                     binding.edPhoneNo.isEnabled = true
                     binding.edPassword.isEnabled = true
-                    Snackbar.make(binding.root, resource.message ?: "Login failed", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        binding.root,
+                        resource.message ?: "Login failed",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -71,9 +83,13 @@ class LoginActivity : AppCompatActivity() {
             if (phoneNo.isNotBlank() && password.isNotBlank()) {
                 loginViewModel.login(phoneNo, password)
             } else {
-                Snackbar.make(this, binding.root, "Isi semua field terlebih dahulu", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    this,
+                    binding.root,
+                    "Isi semua field terlebih dahulu",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
     }
-
 }

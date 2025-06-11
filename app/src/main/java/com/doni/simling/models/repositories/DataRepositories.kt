@@ -9,9 +9,14 @@ import com.doni.simling.helper.manager.TokenManager
 import com.doni.simling.models.connections.configs.ApiServices
 import com.doni.simling.models.connections.requests.LoginRequest
 import com.doni.simling.models.connections.requests.UserRequest
+import com.doni.simling.models.connections.responses.AcceptIncomeResponse
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.DataItemUser
+import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
+import com.doni.simling.models.connections.responses.HomeResponse
+import com.doni.simling.models.connections.responses.RejectIncomeResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
@@ -144,34 +149,7 @@ class DataRepositories @Inject constructor(
         }
     }
 
-    fun getAllFunds(
-        month: String,
-        year: String
-    ): Flow<Resource<List<DataItemFunds>>> = flow {
-        emit(Resource.Loading())
-        try {
-            val token = tokenManager.getToken()
-            if (token.isNullOrEmpty()) {
-                emit(Resource.Error("No token found"))
-                return@flow
-            }
-
-            val response = apiServices.getAllFunds(
-                token = "Bearer $token",
-                month = month,
-                year = year
-            )
-            if (response.isNotEmpty()) {
-                emit(Resource.Success<List<DataItemFunds>>(response))
-            } else {
-                emit(Resource.Error("No funds found"))
-            }
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "An error occurred"))
-        }
-    }
-
-    fun getIncomeFunds(
+    fun getIncome(
         month: String,
         year: String
     ): Flow<PagingData<DataItemFunds>> {
@@ -182,5 +160,103 @@ class DataRepositories @Inject constructor(
                 IncomePagingSource(apiServices, token, month, year, 10)
             }
         ).flow
+    }
+
+    fun getFunds(
+        month: String,
+        year: String
+    ): Flow<PagingData<DataItemFunds>> {
+        val token = tokenManager.getToken()
+        return Pager(
+            config = androidx.paging.PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                IncomePagingSource(apiServices, token, month, year, 10)
+            }
+        ).flow
+    }
+
+    fun getFunds(): Flow<PagingData<DataItemUser>> {
+        val token = tokenManager.getToken()
+        return Pager(
+            config = androidx.paging.PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                UserPagingSource(apiServices, token, 10)
+            }
+        ).flow
+    }
+
+    fun getHome(): Flow<Resource<HomeResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getHomeData(
+                token = "Bearer $token"
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getFundIncomeDetail(id: Int): Flow<Resource<GetFundIncomeDetailResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getFundById(
+                token = "Bearer $token",
+                id = id
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun acceptIncome(id: Int): Flow<Resource<AcceptIncomeResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.acceptIncome(
+                token = "Bearer $token",
+                id = id
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun rejectIncome(id: Int): Flow<Resource<RejectIncomeResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.rejectIncome(
+                token = "Bearer $token",
+                id = id
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
     }
 }

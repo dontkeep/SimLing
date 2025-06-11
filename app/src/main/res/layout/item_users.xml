@@ -20,16 +20,14 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="Alamat(Blok): "
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleMember" />
 
         <TextView
             android:id="@+id/tvAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="A1"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tvTitleAddress"
             app:layout_constraintStart_toEndOf="@+id/tvTitleAddress"
             app:layout_constraintTop_toTopOf="@+id/tvTitleAddress" />
@@ -39,16 +37,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:text="Kepala Keluarga: "
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleAddress" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvMember"
+            android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Doni Arafat"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tvTitleMember"
             app:layout_constraintStart_toEndOf="@+id/tvTitleMember"
             app:layout_constraintTop_toTopOf="@+id/tvTitleMember" />

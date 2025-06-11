@@ -30,8 +30,20 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <Button
+                android:id="@+id/backBtn"
+                style="?attr/materialIconButtonFilledStyle"
+                android:backgroundTint="@color/green_pastel"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="8dp"
+                app:icon="@drawable/ic_back"
+                app:iconTint="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
-                android:id="@+id/icCalender"
+                android:id="@+id/icCalendar"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="16dp"
@@ -86,7 +98,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvRole" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvMembers"
+                android:id="@+id/rvFunds"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:clipToPadding="false"

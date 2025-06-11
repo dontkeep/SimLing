@@ -36,6 +36,10 @@ class AddFamilyActivity : AppCompatActivity() {
         }
 
         setupViews()
+
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setupViews() {

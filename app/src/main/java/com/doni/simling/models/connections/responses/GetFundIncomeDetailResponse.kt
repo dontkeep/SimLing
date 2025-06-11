@@ -2,25 +2,13 @@ package com.doni.simling.models.connections.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class GetAllFundsResponse(
-
-	@field:SerializedName("total")
-	val total: Int? = null,
+data class GetFundIncomeDetailResponse(
 
 	@field:SerializedName("data")
-	val data: List<DataItemFunds?>? = null,
-
-	@field:SerializedName("limit")
-	val limit: Int? = null,
-
-	@field:SerializedName("totalPages")
-	val totalPages: Int? = null,
-
-	@field:SerializedName("page")
-	val page: Int? = null
+	val data: DataFundIncome? = null
 )
 
-data class DataItemFunds(
+data class DataFundIncome(
 
 	@field:SerializedName("image")
 	val image: String? = null,
