@@ -111,7 +111,7 @@ class AddFundActivity : AppCompatActivity() {
             val amountRequestBody = createRequestBody(cleanString)
             val descriptionRequestBody = createRequestBody(description)
             val isIncomeRequestBody = createRequestBody("false")
-            val statusRequestBody = createRequestBody("Pending")
+            val statusRequestBody = createRequestBody("Accepted")
             val blockRequestBody = createRequestBody("")
 
             receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
