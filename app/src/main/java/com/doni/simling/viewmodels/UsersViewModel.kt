@@ -15,5 +15,5 @@ class UserViewModel @Inject constructor(
     private val repository: DataRepositories
 ) : ViewModel() {
 
-    fun getUsers(): Flow<PagingData<DataItemUser>> = repository.getFunds().cachedIn(viewModelScope)
+    fun getUsers(): Flow<PagingData<DataItemUser>> = repository.getUsers().cachedIn(viewModelScope)
 }

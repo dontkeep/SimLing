@@ -150,12 +150,14 @@ interface ApiServices {
         @Path("id") id: Int
     ): GetFundIncomeDetailResponse
 
-    @GET("/api/funds")
+    @GET("/api/funds-expense")
     suspend fun getAllFunds(
         @Header("Authorization") token: String,
         @Query("month") month: String,
-        @Query("year") year: String
-    ): List<DataItemFunds> //update this to the correct response type
+        @Query("year") year: String,
+        @Query("page") page: Int? = null,
+        @Query("limit") limit: Int? = null
+    ): GetAllFundsResponse //update this to the correct response type
 
     @GET("/api/funds-income")
     suspend fun getAllIncome(
