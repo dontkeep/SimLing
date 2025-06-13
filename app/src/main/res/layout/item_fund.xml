@@ -35,33 +35,16 @@
             app:layout_constraintTop_toTopOf="@+id/tvTitleDate" />
 
         <TextView
-            android:id="@+id/tvTitleDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Deskripsi: "
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleDate" />
-
-        <TextView
-            android:id="@+id/tvDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor sit amet..."
-            app:layout_constraintBottom_toBottomOf="@+id/tvTitleDesc"
-            app:layout_constraintStart_toEndOf="@+id/tvTitleDesc"
-            app:layout_constraintTop_toTopOf="@+id/tvTitleDesc" />
-
-        <TextView
             android:id="@+id/tvTitleAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:text="Bayar: "
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleDesc" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDate" />
 
         <TextView
             android:id="@+id/tvBayar"
