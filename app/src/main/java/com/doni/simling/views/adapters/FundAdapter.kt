@@ -10,7 +10,9 @@ import com.doni.simling.helper.DateHelper.formatDate
 import com.doni.simling.helper.formatCurrency
 import com.doni.simling.models.connections.responses.DataItemFunds
 
-class FundAdapter: PagingDataAdapter<DataItemFunds, FundAdapter.ViewHolder>(DIFF_CALLBACK) {
+class FundAdapter(
+    private val onItemClick: (DataItemFunds) -> Unit
+): PagingDataAdapter<DataItemFunds, FundAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -25,10 +27,16 @@ class FundAdapter: PagingDataAdapter<DataItemFunds, FundAdapter.ViewHolder>(DIFF
 
     inner class ViewHolder(private val binding: ItemFundBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(fundItem: DataItemFunds) {
-            binding.tvBayar.text = fundItem.amount.toString()
+            binding.tvBayar.text = formatCurrency(fundItem.amount ?: 0)
             binding.tvDate.text = formatDate(fundItem.createdAt)
-            binding.tvDesc.text = fundItem.description.toString()
+
+            binding.root.setOnClickListener {
+                fundItem.id?.let { id ->
+                    onItemClick(fundItem)
+                }
+            }
         }
+
     }
 
     companion object {
