@@ -7,6 +7,7 @@ import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.connections.responses.DeleteUserResponse
+import com.doni.simling.models.connections.responses.EditUserResponse
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import com.doni.simling.models.connections.responses.GetAllUserResponse
 import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
@@ -62,9 +63,9 @@ interface ApiServices {
     @PUT("/api/users/{id}")
     suspend fun updateUser(
         @Header("Authorization") token: String,
-        @Path("id") id: String,
+        @Path("id") id: Int,
         @Body userRequest: UserRequest
-    ): CreateUserResponse //update this to the correct response type
+    ): EditUserResponse
 
     @DELETE("/api/users/{id}")
     suspend fun deleteUser(

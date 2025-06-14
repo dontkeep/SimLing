@@ -15,8 +15,8 @@ import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
 import com.doni.simling.models.connections.responses.DataItemUser
 import com.doni.simling.models.connections.responses.DeleteUserResponse
+import com.doni.simling.models.connections.responses.EditUserResponse
 import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
-import com.doni.simling.models.connections.responses.GetUserDetailResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.RejectIncomeResponse
 import kotlinx.coroutines.flow.Flow
@@ -274,6 +274,42 @@ class DataRepositories @Inject constructor(
             val response = apiServices.deleteUser(
                 token = "Bearer $token",
                 id = id
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun editUser(
+        id: Int,
+        name: String,
+        phoneNo: String,
+        email: String,
+        password: String,
+        address: String,
+        roleId: Int
+    ): Flow<Resource<EditUserResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.updateUser(
+                token = "Bearer $token",
+                id = id,
+                userRequest = UserRequest(
+                    phone_no = phoneNo,
+                    email = email,
+                    password = password,
+                    name = name,
+                    address = address,
+                    role_id = roleId,
+                    family_members = emptyList()
+                )
             )
             emit(Resource.Success(response))
         } catch (e: Exception) {
