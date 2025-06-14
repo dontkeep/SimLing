@@ -1,6 +1,8 @@
 package com.doni.simling.models.connections.responses
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class GetAllUserResponse(
 
@@ -20,6 +22,7 @@ data class GetAllUserResponse(
 	val page: Int? = null
 )
 
+@Parcelize
 data class DataItemUser(
 
 	@field:SerializedName("phone_no")
@@ -39,4 +42,4 @@ data class DataItemUser(
 
 	@field:SerializedName("email")
 	val email: String? = null
-)
+) : Parcelable

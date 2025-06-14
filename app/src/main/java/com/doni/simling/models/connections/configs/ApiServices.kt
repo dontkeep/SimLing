@@ -6,9 +6,11 @@ import com.doni.simling.models.connections.responses.AcceptIncomeResponse
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.DeleteUserResponse
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import com.doni.simling.models.connections.responses.GetAllUserResponse
 import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
+import com.doni.simling.models.connections.responses.GetUserDetailResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
@@ -51,6 +53,12 @@ interface ApiServices {
         @Query("limit") limit: Int? = null
     ): GetAllUserResponse
 
+    @GET("/api/users/{id}")
+    suspend fun detailUser(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): GetUserDetailResponse //update this to the correct response type
+
     @PUT("/api/users/{id}")
     suspend fun updateUser(
         @Header("Authorization") token: String,
@@ -61,8 +69,8 @@ interface ApiServices {
     @DELETE("/api/users/{id}")
     suspend fun deleteUser(
         @Header("Authorization") token: String,
-        @Path("id") id: String
-    ): CreateUserResponse //update this to the correct response type
+        @Path("id") id: Int
+    ): DeleteUserResponse
 
     @GET("/api/funds-income")
     suspend fun getFundsIncome(

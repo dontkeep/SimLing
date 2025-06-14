@@ -8,13 +8,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.doni.simling.databinding.ItemUsersBinding
 import com.doni.simling.models.connections.responses.DataItemUser
 
-class UsersAdapter : PagingDataAdapter<DataItemUser, UsersAdapter.ViewHolder>(DIFF_CALLBACK) {
+class UsersAdapter(
+    private val onItemClick: (DataItemUser) -> Unit
+) : PagingDataAdapter<DataItemUser, UsersAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     inner class ViewHolder(private val binding: ItemUsersBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: DataItemUser) {
             binding.tvName.text = user.name
             binding.tvAddress.text = user.address
+
+            binding.root.setOnClickListener {
+                onItemClick(user)
+            }
         }
     }
 
