@@ -1,6 +1,7 @@
 package com.doni.simling.views.fragments
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -122,7 +123,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun rvSecuritySetup(): SecurityRecordByUserAdapter {
-        val adapter = SecurityRecordByUserAdapter()
+        val adapter = SecurityRecordByUserAdapter { item ->
+            openLocationInMap(item.latitude, item.longitude)
+        }
         binding.rvTodayRecords.adapter = adapter
         binding.rvTodayRecords.layoutManager = LinearLayoutManager(requireContext())
         return adapter
@@ -201,10 +204,36 @@ class HomeFragment : Fragment() {
     private fun updateUI(data: HomeResponse?) {
         data?.let {
             binding.tvCurrentAmount.text = formatCurrency(it.currentCredit ?: 0)
-            binding.tvIncomePerMonth.text = formatCurrency(it.currentCredit ?: 0)
+            binding.tvIncomePerMonth.text = formatCurrency(it.totalIncome ?: 0)
             binding.tvFundsPerMonth.text = formatCurrency(it.totalExpense ?: 0)
+            binding.tvSecurityAmount.text = "${it.totalSecurity} Petugas"
             binding.tvMemberAmount.text = "${it.totalUsers} Kepala Keluarga"
             binding.tvNewMember.text = "${it.usersAddedThisMonth} Keluarga"
+        }
+    }
+
+    private fun openLocationInMap(latitude: String?, longitude: String?) {
+        if (latitude == null || longitude == null) {
+            Toast.makeText(requireContext(), "Koordinat tidak valid", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            val uri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude")
+            val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+
+            if (mapIntent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(mapIntent)
+            } else {
+                // Jika Google Maps tidak terinstall, buka browser
+                val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude")
+                val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+                startActivity(webIntent)
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Gagal membuka peta", Toast.LENGTH_SHORT).show()
+            Log.e("SecurityFragment", "Error opening map", e)
         }
     }
 
