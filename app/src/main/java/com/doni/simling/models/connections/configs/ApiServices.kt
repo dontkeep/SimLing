@@ -1,6 +1,7 @@
 package com.doni.simling.models.connections.configs
 
 import com.doni.simling.models.connections.requests.LoginRequest
+import com.doni.simling.models.connections.requests.SecurityRecordRequest
 import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.AcceptIncomeResponse
 import com.doni.simling.models.connections.responses.AddSecurityResponse
