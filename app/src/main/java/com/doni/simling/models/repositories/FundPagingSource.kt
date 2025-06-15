@@ -17,7 +17,7 @@ class FundPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DataItemFunds> {
         val page = params.key ?: 1
         return try {
-            val response = apiService.getAllIncome(
+            val response = apiService.getAllFunds(
                 token = "Bearer $token",
                 month = month,
                 year = year,

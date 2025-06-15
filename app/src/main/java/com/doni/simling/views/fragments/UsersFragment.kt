@@ -1,5 +1,6 @@
 package com.doni.simling.views.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.doni.simling.R
 import com.doni.simling.databinding.FragmentUsersBinding
 import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.viewmodels.UserViewModel
+import com.doni.simling.views.activities.DetailUserActivity
 import com.doni.simling.views.adapters.UsersAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,7 +43,12 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = UsersAdapter()
+        adapter = UsersAdapter { user ->
+            val intent = Intent(requireContext(), DetailUserActivity::class.java).apply {
+                putExtra("USER_DATA", user)
+            }
+            startActivity(intent)
+        }
         binding.rvMembers.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMembers.adapter = adapter
 

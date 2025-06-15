@@ -1,29 +1,17 @@
 package com.doni.simling.models.connections.responses
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
-data class GetAllUserResponse(
+data class EditUserResponse(
 
-	@field:SerializedName("total")
-	val total: Int? = null,
+	@field:SerializedName("message")
+	val message: String? = null,
 
-	@field:SerializedName("data")
-	val data: List<DataItemUser?>? = null,
-
-	@field:SerializedName("limit")
-	val limit: Int? = null,
-
-	@field:SerializedName("totalPages")
-	val totalPages: Int? = null,
-
-	@field:SerializedName("page")
-	val page: Int? = null
+	@field:SerializedName("user")
+	val user: UserDataEdit? = null
 )
 
-@Parcelize
-data class DataItemUser(
+data class UserDataEdit(
 
 	@field:SerializedName("phone_no")
 	val phoneNo: String? = null,
@@ -42,4 +30,4 @@ data class DataItemUser(
 
 	@field:SerializedName("email")
 	val email: String? = null
-) : Parcelable
+)

@@ -1,18 +1,20 @@
 package com.doni.simling.models.connections.configs
 
 import com.doni.simling.models.connections.requests.LoginRequest
-import com.doni.simling.models.connections.requests.SecurityRecordRequest
 import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.AcceptIncomeResponse
 import com.doni.simling.models.connections.responses.AddSecurityResponse
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.DeleteUserResponse
+import com.doni.simling.models.connections.responses.EditUserResponse
 import com.doni.simling.models.connections.responses.DataItemSecurityByUser
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
 import com.doni.simling.models.connections.responses.GetAllSecurityRecordsResponse
 import com.doni.simling.models.connections.responses.GetAllUserResponse
 import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
+import com.doni.simling.models.connections.responses.GetUserDetailResponse
 import com.doni.simling.models.connections.responses.GetSecurityByUserResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.LoginResponse
@@ -56,18 +58,24 @@ interface ApiServices {
         @Query("limit") limit: Int? = null
     ): GetAllUserResponse
 
+    @GET("/api/users/{id}")
+    suspend fun detailUser(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): GetUserDetailResponse //update this to the correct response type
+
     @PUT("/api/users/{id}")
     suspend fun updateUser(
         @Header("Authorization") token: String,
-        @Path("id") id: String,
+        @Path("id") id: Int,
         @Body userRequest: UserRequest
-    ): CreateUserResponse //update this to the correct response type
+    ): EditUserResponse
 
     @DELETE("/api/users/{id}")
     suspend fun deleteUser(
         @Header("Authorization") token: String,
-        @Path("id") id: String
-    ): CreateUserResponse //update this to the correct response type
+        @Path("id") id: Int
+    ): DeleteUserResponse
 
     @GET("/api/funds-income")
     suspend fun getFundsIncome(
@@ -163,12 +171,14 @@ interface ApiServices {
         @Path("id") id: Int
     ): GetFundIncomeDetailResponse
 
-    @GET("/api/funds")
+    @GET("/api/funds-expense")
     suspend fun getAllFunds(
         @Header("Authorization") token: String,
         @Query("month") month: String,
-        @Query("year") year: String
-    ): List<DataItemFunds> //update this to the correct response type
+        @Query("year") year: String,
+        @Query("page") page: Int? = null,
+        @Query("limit") limit: Int? = null
+    ): GetAllFundsResponse //update this to the correct response type
 
     @GET("/api/funds-income")
     suspend fun getAllIncome(

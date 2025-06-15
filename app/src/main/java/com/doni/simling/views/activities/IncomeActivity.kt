@@ -70,9 +70,9 @@ class IncomeActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        fundAdapter = IncomeAdapter { fundItem ->
+        fundAdapter = IncomeAdapter { incomeItem ->
             val intent = Intent(this, DetailIncomeActivity::class.java).apply {
-                putExtra("FUND_ID", fundItem.id)
+                putExtra("FUND_ID", incomeItem.id)
             }
             startActivity(intent)
         }
