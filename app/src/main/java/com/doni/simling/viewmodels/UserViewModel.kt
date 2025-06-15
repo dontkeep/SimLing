@@ -26,7 +26,6 @@ class UserViewModel @Inject constructor(
     private val _deleteUser = MutableLiveData<Resource<DeleteUserResponse>>()
     val deleteUser: MutableLiveData<Resource<DeleteUserResponse>> = _deleteUser
 
-
     private val _editUser = MutableLiveData<Resource<EditUserResponse>>()
     val editUser: LiveData<Resource<EditUserResponse>> get() = _editUser
 
