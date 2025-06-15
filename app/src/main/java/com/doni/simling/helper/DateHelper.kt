@@ -3,6 +3,7 @@ package com.doni.simling.helper
 import android.icu.util.Calendar
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.text.format
 
 object DateHelper {
 
@@ -14,6 +15,11 @@ object DateHelper {
         return formattedDate.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
+    }
+
+    fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     fun formatDate(dateString: String?): String {

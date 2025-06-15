@@ -1,14 +1,19 @@
 package com.doni.simling.models.connections.configs
 
 import com.doni.simling.models.connections.requests.LoginRequest
+import com.doni.simling.models.connections.requests.SecurityRecordRequest
 import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.AcceptIncomeResponse
+import com.doni.simling.models.connections.responses.AddSecurityResponse
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.DataItemSecurityByUser
 import com.doni.simling.models.connections.responses.GetAllFundsResponse
+import com.doni.simling.models.connections.responses.GetAllSecurityRecordsResponse
 import com.doni.simling.models.connections.responses.GetAllUserResponse
 import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
+import com.doni.simling.models.connections.responses.GetSecurityByUserResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.LoginResponse
 import com.doni.simling.models.connections.responses.LogoutResponse
@@ -123,26 +128,34 @@ interface ApiServices {
     @GET("/api/security-records/by-user")
     suspend fun getSecurityRecordsByUser(
         @Header("Authorization") token: String
-    ): List<CreateUserResponse> //update this to the correct response type
+    ): GetSecurityByUserResponse
+
+    @GET("/api/security-records/by-user-by-day")
+    suspend fun getSecurityRecordsByUserByDay(
+        @Header("Authorization") token: String,
+        @Query("date") date: String
+    ): GetSecurityByUserResponse
 
     @GET("/api/security-records/by-day")
     suspend fun getSecurityRecordsByDay(
         @Header("Authorization") token: String,
         @Query("date") date: String
-    ): List<CreateUserResponse> //update this to the correct response type
+    ): GetSecurityByUserResponse
 
     @GET("/api/security-records")
     suspend fun getAllSecurityRecords(
         @Header("Authorization") token: String,
         @Query("month") month: String,
-        @Query("year") year: String
-    ): List<CreateUserResponse> //update this to the correct response type
+        @Query("year") year: String,
+        @Query("page") page: Int? = null,
+        @Query("limit") limit: Int? = null
+    ): GetAllSecurityRecordsResponse
 
     @POST("/api/security-records/add")
     suspend fun addSecurityRecord(
         @Header("Authorization") token: String,
-        @Body securityRecord: CreateUserResponse //update this to the correct request type
-    ): CreateUserResponse //update this to the correct response type
+        @Body securityRecord: SecurityRecordRequest //update this to the correct request type
+    ): AddSecurityResponse //update this to the correct response type
 
     @GET("/api/funds/{id}")
     suspend fun getFundById(

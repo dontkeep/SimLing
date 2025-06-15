@@ -12,6 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.doni.simling.databinding.FragmentHomeBinding
 import com.doni.simling.helper.DateHelper
 import com.doni.simling.helper.Resource
@@ -20,12 +22,15 @@ import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.viewmodels.HomeViewModel
 import com.doni.simling.viewmodels.LogoutViewModel
+import com.doni.simling.viewmodels.SecurityViewModel
 import com.doni.simling.views.activities.AddFamilyActivity
 import com.doni.simling.views.activities.CameraActivity
 import com.doni.simling.views.activities.FundsActivity
 import com.doni.simling.views.activities.IncomeActivity
 import com.doni.simling.views.activities.LoginActivity
+import com.doni.simling.views.adapters.SecurityRecordByUserAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,6 +43,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: LogoutViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
+    private val securityViewModel: SecurityViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +78,8 @@ class HomeFragment : Fragment() {
                 binding.cardWarga.visibility = View.GONE
                 binding.cardSummary.visibility = View.GONE
                 binding.cardMenuSecurity.visibility = View.VISIBLE
+                val securityAdapter = rvSecuritySetup()
+                observeSecurityData(securityAdapter)
             }
         }
 
@@ -111,6 +119,34 @@ class HomeFragment : Fragment() {
             }
             .create()
             .show()
+    }
+
+    private fun rvSecuritySetup(): SecurityRecordByUserAdapter {
+        val adapter = SecurityRecordByUserAdapter()
+        binding.rvTodayRecords.adapter = adapter
+        binding.rvTodayRecords.layoutManager = LinearLayoutManager(requireContext())
+        return adapter
+    }
+
+    private fun observeSecurityData(adapter: SecurityRecordByUserAdapter) {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            securityViewModel.securityRecordsByUserByDay(DateHelper.getCurrentDate())
+                .collectLatest { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            binding.progressIndicator.visibility = View.VISIBLE
+                        }
+                        is Resource.Success -> {
+                            binding.progressIndicator.visibility = View.GONE
+                            adapter.submitList(resource.data?.data)
+                        }
+                        is Resource.Error -> {
+                            binding.progressIndicator.visibility = View.GONE
+                            Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+        }
     }
 
     private fun observeLogoutState() {

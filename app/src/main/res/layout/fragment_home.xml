@@ -354,6 +354,16 @@
             android:padding="16dp"
             android:visibility="visible">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTodayRecords"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/btnScan"
+                android:clipToPadding="false"
+                android:paddingBottom="70dp"
+                />
+
             <Button
                 android:id="@+id/btnScan"
                 android:layout_width="wrap_content"
@@ -361,6 +371,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
                 android:text="Scan Barcode"
+                android:backgroundTint="@color/green_pastel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
