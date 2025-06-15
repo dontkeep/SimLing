@@ -22,7 +22,7 @@ class AddFamilyActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddFamilyBinding
     private val viewModel: AddFamilyViewModel by viewModels()
-    private val roles = listOf("Admin", "Warga", "Security")
+    private val roles = listOf("Warga", "Security")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +113,6 @@ class AddFamilyActivity : AppCompatActivity() {
                         password = password,
                         address = address,
                         roleId = when (role) {
-                            "Admin" -> 1
                             "Warga" -> 2
                             "Security" -> 3
                             else -> 0

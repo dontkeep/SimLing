@@ -15,19 +15,31 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.paging.map
+import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: DataRepositories
 ) : ViewModel() {
 
-    fun getUsers(): Flow<PagingData<DataItemUser>> = repository.getUsers().cachedIn(viewModelScope)
+    private val _allUsers = mutableListOf<DataItemUser>()
+    val allUsers: List<DataItemUser> get() = _allUsers
 
     private val _deleteUser = MutableLiveData<Resource<DeleteUserResponse>>()
     val deleteUser: MutableLiveData<Resource<DeleteUserResponse>> = _deleteUser
 
     private val _editUser = MutableLiveData<Resource<EditUserResponse>>()
     val editUser: LiveData<Resource<EditUserResponse>> get() = _editUser
+
+    fun getUsers(): Flow<PagingData<DataItemUser>> = repository.getUsers()
+        .map { pagingData ->
+            pagingData.map { user ->
+                _allUsers.add(user)
+                user
+            }
+        }
+        .cachedIn(viewModelScope)
 
     fun deleteUser(id: Int) {
         viewModelScope.launch {
