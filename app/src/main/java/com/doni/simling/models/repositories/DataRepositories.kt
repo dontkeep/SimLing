@@ -8,15 +8,21 @@ import com.doni.simling.helper.manager.RoleManager
 import com.doni.simling.helper.manager.TokenManager
 import com.doni.simling.models.connections.configs.ApiServices
 import com.doni.simling.models.connections.requests.LoginRequest
+import com.doni.simling.models.connections.requests.SecurityRecordRequest
 import com.doni.simling.models.connections.requests.UserRequest
 import com.doni.simling.models.connections.responses.AcceptIncomeResponse
+import com.doni.simling.models.connections.responses.AddSecurityResponse
 import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
+import com.doni.simling.models.connections.responses.DataItem3
 import com.doni.simling.models.connections.responses.DataItemFunds
+import com.doni.simling.models.connections.responses.DataItemSecurityByUser
 import com.doni.simling.models.connections.responses.DataItemUser
+import com.doni.simling.models.connections.responses.GetAllSecurityRecordsResponse
 import com.doni.simling.models.connections.responses.DeleteUserResponse
 import com.doni.simling.models.connections.responses.EditUserResponse
 import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
+import com.doni.simling.models.connections.responses.GetSecurityByUserResponse
 import com.doni.simling.models.connections.responses.HomeResponse
 import com.doni.simling.models.connections.responses.RejectIncomeResponse
 import kotlinx.coroutines.flow.Flow
@@ -172,12 +178,12 @@ class DataRepositories @Inject constructor(
         return Pager(
             config = androidx.paging.PagingConfig(pageSize = 10),
             pagingSourceFactory = {
-                FundPagingSource(apiServices, token, month, year, 10)
+                IncomePagingSource(apiServices, token, month, year, 10)
             }
         ).flow
     }
 
-    fun getUsers(): Flow<PagingData<DataItemUser>> {
+    fun getFunds(): Flow<PagingData<DataItemUser>> {
         val token = tokenManager.getToken()
         return Pager(
             config = androidx.paging.PagingConfig(pageSize = 10),
@@ -260,6 +266,100 @@ class DataRepositories @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.Error(e.message ?: "An error occurred"))
         }
+    }
+
+    fun addSecurityRecord(block: String, longitude: Double, latitude: Double): Flow<Resource<AddSecurityResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val request = SecurityRecordRequest(
+                block = block,
+                longitude = longitude,
+                latitude = latitude
+            )
+
+            val response = apiServices.addSecurityRecord(
+                token = "Bearer $token",
+                securityRecord = request
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getUserSecurityRecordByUser(): Flow<Resource<GetSecurityByUserResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getSecurityRecordsByUser(
+                token = "Bearer $token"
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getUserSecurityRecordByUserByDay(date: String): Flow<Resource<GetSecurityByUserResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getSecurityRecordsByUserByDay(
+                token = "Bearer $token",
+                date = date
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getSecurityRecordByDay(date: String): Flow<Resource<GetSecurityByUserResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getSecurityRecordsByDay(
+                token = "Bearer $token",
+                date = date
+            )
+            emit(Resource.Success(response))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getAllSecurityRecords(
+        month: String,
+        year: String
+    ): Flow<PagingData<DataItem3>> {
+        val token = tokenManager.getToken()
+        return Pager(
+            config = androidx.paging.PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                AllSecurityRecordsPagingSource(apiServices, token, month = month, year = year)
+            }
+        ).flow
     }
 
     fun deleteUser(id: Int): Flow<Resource<DeleteUserResponse>> = flow {
