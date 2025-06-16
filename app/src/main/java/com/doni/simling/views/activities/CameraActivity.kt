@@ -108,7 +108,7 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
 
     when (hasCameraPermission) {
         true -> {
-            ZenScannerScreen(
+            BorderQRScanner(
                 modifier = Modifier.fillMaxSize(),
                 isScanningEnabled = scanningEnabled,
                 isFlashEnabled = true,
@@ -119,7 +119,7 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
                     val lat = location?.latitude
                     val lon = location?.longitude
                     if (lat != null && lon != null) {
-                        scanningEnabled = false // Stop scanning
+                        scanningEnabled = false
                         cameraViewModel.addSecurityRecord(block, lat, lon)
                     }
                 }
