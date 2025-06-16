@@ -108,7 +108,7 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
 
     when (hasCameraPermission) {
         true -> {
-            BorderQRScanner(
+            ZenScannerScreen(
                 modifier = Modifier.fillMaxSize(),
                 isScanningEnabled = scanningEnabled,
                 isFlashEnabled = true,
