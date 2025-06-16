@@ -61,6 +61,10 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
     var showDialog by remember { mutableStateOf(false) }
     var scanningEnabled by remember { mutableStateOf(true) }
 
+    LaunchedEffect(Unit) {
+        scanningEnabled = true
+    }
+
     CameraPermissionHandler { granted ->
         hasCameraPermission = granted
     }
