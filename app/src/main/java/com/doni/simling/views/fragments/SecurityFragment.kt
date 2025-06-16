@@ -12,8 +12,6 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.doni.simling.R
-import com.doni.simling.databinding.FragmentHomeBinding
 import com.doni.simling.databinding.FragmentSecurityBinding
 import com.doni.simling.helper.DateHelper
 import com.doni.simling.helper.Resource
@@ -24,7 +22,6 @@ import com.doni.simling.views.adapters.SecurityRecordByUserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
-import kotlin.time.Duration
 
 @AndroidEntryPoint
 class SecurityFragment : Fragment() {
@@ -156,7 +153,6 @@ class SecurityFragment : Fragment() {
             if (mapIntent.resolveActivity(requireActivity().packageManager) != null) {
                 startActivity(mapIntent)
             } else {
-                // Jika Google Maps tidak terinstall, buka browser
                 val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude")
                 val webIntent = Intent(Intent.ACTION_VIEW, webUri)
                 startActivity(webIntent)
