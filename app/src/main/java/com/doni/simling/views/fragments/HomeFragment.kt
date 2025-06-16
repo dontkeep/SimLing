@@ -1,6 +1,7 @@
 package com.doni.simling.views.fragments
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.location.LocationManager
+import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
@@ -39,11 +43,25 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var roleManager: RoleManager
 
+    @Inject
+    lateinit var locationManager: LocationManager
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: LogoutViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
     private val securityViewModel: SecurityViewModel by viewModels()
+
+
+    private val gpsRequestLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (isGpsEnabled()) {
+            startCameraActivity()
+        } else {
+            Toast.makeText(requireContext(), "GPS masih dimatikan", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,8 +118,29 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnScan.setOnClickListener {
-            val intent = Intent(requireContext(), CameraActivity::class.java)
-            startActivity(intent)
+            checkGpsAndOpenCamera()
+        }
+    }
+
+    private fun checkGpsAndOpenCamera() {
+        try {
+            if (isGpsEnabled()) {
+                startCameraActivity()
+            } else {
+                showEnableGpsDialog()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Gagal memeriksa status GPS", Toast.LENGTH_SHORT).show()
+            Log.e("HomeFragment", "Error checking GPS status", e)
+        }
+    }
+
+    private fun isGpsEnabled(): Boolean {
+        return try {
+            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        } catch (e: Exception) {
+            Log.e("HomeFragment", "Error checking GPS provider", e)
+            false
         }
     }
 
@@ -120,9 +159,41 @@ class HomeFragment : Fragment() {
             .create()
             .show()
     }
+    private fun showEnableGpsDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("GPS Dimatikan")
+            .setMessage("Aplikasi membutuhkan GPS untuk fitur scanning. Aktifkan GPS sekarang?")
+            .setPositiveButton("Ya") { _, _ ->
+                enableGps()
+            }
+            .setNegativeButton("Tidak") { dialog, _ ->
+                dialog.dismiss()
+                Toast.makeText(requireContext(), "Fitur scanning membutuhkan GPS", Toast.LENGTH_SHORT).show()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
+    }
+
+    private fun enableGps() {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        try {
+            gpsRequestLauncher.launch(intent)
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Tidak dapat membuka pengaturan GPS", Toast.LENGTH_SHORT).show()
+            Log.e("HomeFragment", "Error opening GPS settings", e)
+        }
+    }
+
+    private fun startCameraActivity() {
+        val intent = Intent(requireContext(), CameraActivity::class.java)
+        startActivity(intent)
+    }
 
     private fun rvSecuritySetup(): SecurityRecordByUserAdapter {
-        val adapter = SecurityRecordByUserAdapter()
+        val adapter = SecurityRecordByUserAdapter { item ->
+            openLocationInMap(item.latitude, item.longitude)
+        }
         binding.rvTodayRecords.adapter = adapter
         binding.rvTodayRecords.layoutManager = LinearLayoutManager(requireContext())
         return adapter
@@ -201,10 +272,36 @@ class HomeFragment : Fragment() {
     private fun updateUI(data: HomeResponse?) {
         data?.let {
             binding.tvCurrentAmount.text = formatCurrency(it.currentCredit ?: 0)
-            binding.tvIncomePerMonth.text = formatCurrency(it.currentCredit ?: 0)
+            binding.tvIncomePerMonth.text = formatCurrency(it.totalIncome ?: 0)
             binding.tvFundsPerMonth.text = formatCurrency(it.totalExpense ?: 0)
+            binding.tvSecurityAmount.text = "${it.totalSecurity} Petugas"
             binding.tvMemberAmount.text = "${it.totalUsers} Kepala Keluarga"
             binding.tvNewMember.text = "${it.usersAddedThisMonth} Keluarga"
+        }
+    }
+
+    private fun openLocationInMap(latitude: String?, longitude: String?) {
+        if (latitude == null || longitude == null) {
+            Toast.makeText(requireContext(), "Koordinat tidak valid", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            val uri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude")
+            val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+
+            if (mapIntent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(mapIntent)
+            } else {
+                // Jika Google Maps tidak terinstall, buka browser
+                val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude")
+                val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+                startActivity(webIntent)
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Gagal membuka peta", Toast.LENGTH_SHORT).show()
+            Log.e("SecurityFragment", "Error opening map", e)
         }
     }
 

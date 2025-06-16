@@ -2,7 +2,7 @@ package com.doni.simling.views.activities
 
 import android.R
 import android.os.Bundle
-import android.util.Log
+import android.util.Patterns
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -22,7 +22,7 @@ class AddFamilyActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddFamilyBinding
     private val viewModel: AddFamilyViewModel by viewModels()
-    private val roles = listOf("Admin", "Warga", "Security")
+    private val roles = listOf("Warga", "Security")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,22 +47,64 @@ class AddFamilyActivity : AppCompatActivity() {
         (binding.textFieldCategory.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
         binding.saveBtn.setOnClickListener {
-            val name = binding.textFieldName.editText?.text.toString()
-            val phoneNo = binding.textFieldPhone.editText?.text.toString()
-            val email = binding.textFieldEmail.editText?.text.toString()
-            val password = binding.textFieldPassword.editText?.text.toString()
-            val confirmPassword = binding.textFieldPasswordVerify.editText?.text.toString()
-            val address = binding.textFieldAddress.editText?.text.toString()
-            val role = binding.textFieldCategory.editText?.text.toString()
+            val name = binding.textFieldName.editText?.text.toString().trim()
+            val phoneNo = binding.textFieldPhone.editText?.text.toString().trim()
+            val email = binding.textFieldEmail.editText?.text.toString().trim()
+            val password = binding.textFieldPassword.editText?.text.toString().trim()
+            val confirmPassword = binding.textFieldPasswordVerify.editText?.text.toString().trim()
+            val address = binding.textFieldAddress.editText?.text.toString().trim()
+            val role = binding.textFieldCategory.editText?.text.toString().trim()
+
+            // Reset errors
+            binding.textFieldName.error = null
+            binding.textFieldPhone.error = null
+            binding.textFieldEmail.error = null
+            binding.textFieldPassword.error = null
+            binding.textFieldPasswordVerify.error = null
+            binding.textFieldAddress.error = null
+            binding.textFieldCategory.error = null
 
             when {
-                name.isEmpty() -> showToast("Nama tidak boleh kosong")
-                phoneNo.isEmpty() -> showToast("Nomor HP tidak boleh kosong")
-                email.isEmpty() -> showToast("Email tidak boleh kosong")
-                password.isEmpty() -> showToast("Password tidak boleh kosong")
-                password != confirmPassword -> showToast("Password tidak sama")
-                address.isEmpty() -> showToast("Alamat tidak boleh kosong")
-                role.isEmpty() -> showToast("Role harus dipilih")
+                name.isEmpty() -> {
+                    binding.textFieldName.error = "Nama tidak boleh kosong"
+                    binding.textFieldName.requestFocus()
+                }
+                phoneNo.isEmpty() -> {
+                    binding.textFieldPhone.error = "Nomor HP tidak boleh kosong"
+                    binding.textFieldPhone.requestFocus()
+                }
+                phoneNo.length < 10 -> {
+                    binding.textFieldPhone.error = "Nomor HP minimal 10 digit"
+                    binding.textFieldPhone.requestFocus()
+                }
+                email.isEmpty() -> {
+                    binding.textFieldEmail.error = "Email tidak boleh kosong"
+                    binding.textFieldEmail.requestFocus()
+                }
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                    binding.textFieldEmail.error = "Format email tidak valid"
+                    binding.textFieldEmail.requestFocus()
+                }
+                password.isEmpty() -> {
+                    binding.textFieldPassword.error = "Password tidak boleh kosong"
+                    binding.textFieldPassword.requestFocus()
+                }
+                password.length < 6 -> {
+                    binding.textFieldPassword.error = "Password minimal 6 karakter"
+                    binding.textFieldPassword.requestFocus()
+                }
+                password != confirmPassword -> {
+                    binding.textFieldPasswordVerify.error = "Password tidak sama"
+                    binding.textFieldPasswordVerify.requestFocus()
+                }
+                address.isEmpty() -> {
+                    binding.textFieldAddress.error = "Alamat tidak boleh kosong"
+                    binding.textFieldAddress.requestFocus()
+                }
+                role.isEmpty() -> {
+                    binding.textFieldCategory.error = "Role harus dipilih"
+                    binding.textFieldCategory.requestFocus()
+                }
                 else -> {
                     viewModel.addFamily(
                         name = name,
@@ -71,7 +113,6 @@ class AddFamilyActivity : AppCompatActivity() {
                         password = password,
                         address = address,
                         roleId = when (role) {
-                            "Admin" -> 1
                             "Warga" -> 2
                             "Security" -> 3
                             else -> 0
@@ -79,18 +120,8 @@ class AddFamilyActivity : AppCompatActivity() {
                     )
                 }
             }
-            setupObservers()
-            Log.d(
-                "AddFamilyActivity", "" +
-                        "Role: $role" +
-                        "Name: $name" +
-                        "Phone: $phoneNo" +
-                        "Email: $email" +
-                        "Password: $password" +
-                        "Confirm Password: $confirmPassword" +
-                        "Address: $address"
-            )
         }
+        setupObservers()
     }
 
     private fun setupObservers() {
@@ -103,21 +134,18 @@ class AddFamilyActivity : AppCompatActivity() {
 
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    finish()
                     showToast("Berhasil menambahkan")
+                    finish()
                 }
 
                 is Resource.Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.saveBtn.isEnabled = true
-                    showToast("Terjadi kesalahan")
-                    Log.d("AddFamilyActivity", "Error: ${state.message}")
+                    showToast(state.message ?: "Terjadi kesalahan")
                 }
             }
-            binding.saveBtn.isEnabled = true
         }
     }
-
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

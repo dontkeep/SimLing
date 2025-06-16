@@ -1,5 +1,7 @@
 package com.doni.simling.views.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,8 +12,6 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.doni.simling.R
-import com.doni.simling.databinding.FragmentHomeBinding
 import com.doni.simling.databinding.FragmentSecurityBinding
 import com.doni.simling.helper.DateHelper
 import com.doni.simling.helper.Resource
@@ -22,7 +22,6 @@ import com.doni.simling.views.adapters.SecurityRecordByUserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
-import kotlin.time.Duration
 
 @AndroidEntryPoint
 class SecurityFragment : Fragment() {
@@ -54,7 +53,10 @@ class SecurityFragment : Fragment() {
             RoleManager.ROLE_SECURITY -> {
                 binding.roleHeader.visibility = View.GONE
 
-                val adapter = SecurityRecordByUserAdapter()
+
+                val adapter = SecurityRecordByUserAdapter { item ->
+                    openLocationInMap(item.latitude, item.longitude)
+                }
                 binding.rvPresence.adapter = adapter
                 binding.rvPresence.setHasFixedSize(true)
                 binding.rvPresence.visibility = View.VISIBLE
@@ -84,7 +86,10 @@ class SecurityFragment : Fragment() {
                 binding.roleHeader.visibility = View.GONE
                 binding.progressIndicator.visibility = View.GONE
 
-                val adapter = SecurityRecordByUserAdapter()
+
+                val adapter = SecurityRecordByUserAdapter { item ->
+                    openLocationInMap(item.latitude, item.longitude)
+                }
                 binding.rvPresence.adapter = adapter
                 binding.rvPresence.setHasFixedSize(true)
                 binding.rvPresence.visibility = View.VISIBLE
@@ -113,7 +118,9 @@ class SecurityFragment : Fragment() {
                 binding.roleHeader.visibility = View.VISIBLE
                 binding.progressIndicator.visibility = View.GONE
 
-                val adapter = GetAllSecurityRecordAdapter()
+                val adapter = GetAllSecurityRecordAdapter { item ->
+                    openLocationInMap(item.latitude, item.longitude)
+                }
                 binding.rvPresence.adapter = adapter
                 binding.rvPresence.setHasFixedSize(true)
                 binding.rvPresence.visibility = View.VISIBLE
@@ -129,6 +136,30 @@ class SecurityFragment : Fragment() {
             else -> {
                 Toast.makeText(requireContext(), "Role tidak dikenali", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun openLocationInMap(latitude: String?, longitude: String?) {
+        if (latitude == null || longitude == null) {
+            Toast.makeText(requireContext(), "Koordinat tidak valid", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            val uri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude")
+            val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+
+            if (mapIntent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(mapIntent)
+            } else {
+                val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude")
+                val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+                startActivity(webIntent)
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Gagal membuka peta", Toast.LENGTH_SHORT).show()
+            Log.e("SecurityFragment", "Error opening map", e)
         }
     }
 

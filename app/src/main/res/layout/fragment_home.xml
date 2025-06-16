@@ -240,26 +240,46 @@
                 app:layout_constraintTop_toTopOf="@+id/tvTitleMemberAmount" />
 
             <TextView
+                android:id="@+id/tvTitleSecurityAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Total Petugas keamanan:  "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleMemberAmount" />
+
+            <TextView
+                android:id="@+id/tvSecurityAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 Petugas"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTitleSecurityAmount"
+                app:layout_constraintStart_toEndOf="@+id/tvTitleSecurityAmount"
+                app:layout_constraintTop_toTopOf="@+id/tvTitleSecurityAmount" />
+
+            <TextView
                 android:id="@+id/tvTitleAddressAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Jumlah Blok Rumah:  "
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitleMemberAmount" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleSecurityAmount" />
 
             <TextView
                 android:id="@+id/tvAddressAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4 blok (A1 - D10)"
-                app:layout_constraintBottom_toBottomOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintBottom_toTopOf="@+id/tvTitleNewMember"
                 app:layout_constraintStart_toEndOf="@+id/tvTitleAddressAmount"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitleMemberAmount" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleSecurityAmount" />
 
             <TextView
                 android:id="@+id/tvTitleNewMember"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Warga Baru Bulan Ini:  "
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitleAddressAmount" />
@@ -271,7 +291,7 @@
                 android:text="2 Keluarga"
                 app:layout_constraintBottom_toBottomOf="@+id/tvTitleNewMember"
                 app:layout_constraintStart_toEndOf="@+id/tvTitleNewMember"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitleAddressAmount"
+                app:layout_constraintTop_toTopOf="@+id/tvTitleNewMember"
                 app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

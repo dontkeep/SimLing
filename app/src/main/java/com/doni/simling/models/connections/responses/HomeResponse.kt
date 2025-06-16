@@ -10,6 +10,9 @@ data class HomeResponse(
 	@field:SerializedName("total_income")
 	val totalIncome: Int? = null,
 
+	@field:SerializedName("total_security")
+	val totalSecurity: Int? = null,
+
 	@field:SerializedName("month")
 	val month: Int? = null,
 

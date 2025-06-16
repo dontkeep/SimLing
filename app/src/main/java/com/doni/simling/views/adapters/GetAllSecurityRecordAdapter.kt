@@ -10,17 +10,29 @@ import com.doni.simling.models.connections.responses.DataItem3
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-class GetAllSecurityRecordAdapter: PagingDataAdapter<DataItem3, GetAllSecurityRecordAdapter.ViewHolder>(DIFF_CALLBACK) {
+class GetAllSecurityRecordAdapter(
+    private val onItemClick: (DataItem3) -> Unit
+) : PagingDataAdapter<DataItem3, GetAllSecurityRecordAdapter.ViewHolder>(DIFF_CALLBACK) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPresenceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
-    class ViewHolder(private val binding: ItemPresenceBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemPresenceBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: DataItem3?) {
-            binding.tvUser.text = item?.securityName ?: "Unknown User"
-            binding.tvDate.text = formatDate(item?.createdAt)
-            binding.tvTime.text = formatTime(item?.createdAt)
+            item?.let {
+                binding.tvUser.text = it.securityName ?: "Unknown User"
+                binding.tvDate.text = formatDate(it.createdAt)
+                binding.tvTime.text = formatTime(it.createdAt)
+                binding.tvAddress.text = it.block ?: "Unknown Address"
+
+                binding.root.setOnClickListener {
+                    onItemClick(item)
+                }
+            }
         }
 
         private fun formatDate(isoString: String?): String {
@@ -53,7 +65,6 @@ class GetAllSecurityRecordAdapter: PagingDataAdapter<DataItem3, GetAllSecurityRe
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItem3>() {
             override fun areItemsTheSame(oldItem: DataItem3, newItem: DataItem3): Boolean {
-                // Compare unique IDs
                 return oldItem.id == newItem.id
             }
 
@@ -62,5 +73,4 @@ class GetAllSecurityRecordAdapter: PagingDataAdapter<DataItem3, GetAllSecurityRe
             }
         }
     }
-
 }

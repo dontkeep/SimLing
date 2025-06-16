@@ -1,5 +1,6 @@
 package com.doni.simling.views.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -67,6 +68,15 @@ class DetailUserActivity : AppCompatActivity() {
 
         binding.icDelete.setOnClickListener {
             observeDelete(userId)
+        }
+
+        binding.icEdit.setOnClickListener {
+            userData?.let { user ->
+                val intent = Intent(this, EditUserActivity::class.java).apply {
+                    putExtra("USER_DATA", user)
+                }
+                startActivity(intent)
+            }
         }
 
         binding.backBtn.setOnClickListener {

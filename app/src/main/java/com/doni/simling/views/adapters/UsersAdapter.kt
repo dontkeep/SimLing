@@ -14,18 +14,20 @@ class UsersAdapter(
 
     inner class ViewHolder(private val binding: ItemUsersBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(user: DataItemUser) {
             binding.tvName.text = user.name
             binding.tvAddress.text = user.address
-
-            binding.root.setOnClickListener {
-                onItemClick(user)
-            }
+            binding.root.setOnClickListener { onItemClick(user) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemUsersBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemUsersBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 
