@@ -200,7 +200,33 @@ class DataRepositories @Inject constructor(
                 month = month,
                 year = year,
                 page = 1,
-                limit = Int.MAX_VALUE // Fetch all data by setting a very high limit
+                limit = Int.MAX_VALUE
+            )
+            val funds = response.data?.filterNotNull() ?: emptyList()
+            emit(Resource.Success(funds))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred"))
+        }
+    }
+
+    fun getAllIncomeForExport(
+        month: String,
+        year: String
+    ): Flow<Resource<List<DataItemFunds>>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = tokenManager.getToken()
+            if (token.isNullOrEmpty()) {
+                emit(Resource.Error("No token found"))
+                return@flow
+            }
+
+            val response = apiServices.getAllIncome(
+                token = "Bearer $token",
+                month = month,
+                year = year,
+                page = 1,
+                limit = Int.MAX_VALUE
             )
             val funds = response.data?.filterNotNull() ?: emptyList()
             emit(Resource.Success(funds))

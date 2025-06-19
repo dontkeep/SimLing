@@ -1,8 +1,13 @@
 package com.doni.simling.views.activities
 
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -54,7 +59,6 @@ class FundsActivity : AppCompatActivity() {
 
     private var selectedMonth: String = getCurrentMonth()
     private var selectedYear: String = getCurrentYear()
-    private val STORAGE_PERMISSION_CODE = 100
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -62,7 +66,27 @@ class FundsActivity : AppCompatActivity() {
         if (isGranted) {
             showExportOptionsDialog()
         } else {
-            Toast.makeText(this, "Izin penyimpanan ditolak", Toast.LENGTH_SHORT).show()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Jika di Android 11+ dan izin ditolak, jelaskan pentingnya izin
+                AlertDialog.Builder(this)
+                    .setTitle("Izin Diperlukan")
+                    .setMessage("Aplikasi memerlukan izin penyimpanan untuk membuat laporan. Silakan berikan izin melalui pengaturan.")
+                    .setPositiveButton("Buka Pengaturan") { _, _ ->
+                        try {
+                            val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = Uri.parse("package:$packageName")
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                    .setNegativeButton("Batal", null)
+                    .show()
+            } else {
+                Toast.makeText(this, "Izin penyimpanan ditolak", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -147,14 +171,31 @@ class FundsActivity : AppCompatActivity() {
     }
 
     private fun checkStoragePermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            showExportOptionsDialog()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Untuk Android 11 (API 30) ke atas
+            if (Environment.isExternalStorageManager()) {
+                showExportOptionsDialog()
+            } else {
+                try {
+                    val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).apply {
+                        data = Uri.parse("package:$packageName")
+                    }
+                    startActivity(intent)
+                }
+            }
         } else {
-            requestPermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                showExportOptionsDialog()
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
         }
     }
 
@@ -251,7 +292,6 @@ class FundsActivity : AppCompatActivity() {
                                 csvContent.append("\"${formatDate(item.createdAt ?: "")}\",")
                                 csvContent.append("\"${item.description ?: ""}\",")
                                 csvContent.append("\"${item.amount ?: 0}\",")
-                                csvContent.append("\"${item.status ?: ""}\"\n")
                             }
 
                             // Write to file
