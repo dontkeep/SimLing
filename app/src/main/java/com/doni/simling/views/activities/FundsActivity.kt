@@ -23,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.doni.simling.databinding.ActivityFundsBinding
 import com.doni.simling.helper.DateHelper
-import com.doni.simling.helper.DateHelper.formatDate
+import com.doni.simling.helper.DateHelper.formatDateTime
 import com.doni.simling.helper.DateHelper.getCurrentMonth
 import com.doni.simling.helper.DateHelper.getCurrentYear
 import com.doni.simling.helper.MonthYearPickerDialog
@@ -249,7 +249,7 @@ class FundsActivity : AppCompatActivity() {
 
                                     // Add data
                                     fundsList.forEach { item ->
-                                        table.addCell(formatDate(item.createdAt ?: ""))
+                                        table.addCell(formatDateTime(item.createdAt ?: ""))
                                         table.addCell(item.description ?: "")
                                         table.addCell(formatCurrency(item.amount ?: 0))
                                     }
@@ -290,7 +290,7 @@ class FundsActivity : AppCompatActivity() {
 
                             // Add data
                             fundsList.forEach { item ->
-                                csvContent.append("\"${formatDate(item.createdAt ?: "")}\",")
+                                csvContent.append("\"${formatDateTime(item.createdAt ?: "")}\",")
                                 csvContent.append("\"${item.description ?: ""}\",")
                                 csvContent.append("\"${item.amount ?: 0}\",\n")
                             }
