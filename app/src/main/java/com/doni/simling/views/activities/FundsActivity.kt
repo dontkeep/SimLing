@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.doni.simling.databinding.ActivityFundsBinding
+import com.doni.simling.helper.DateHelper
 import com.doni.simling.helper.DateHelper.formatDate
 import com.doni.simling.helper.DateHelper.getCurrentMonth
 import com.doni.simling.helper.DateHelper.getCurrentYear
@@ -214,7 +215,7 @@ class FundsActivity : AppCompatActivity() {
 
     private fun exportAsPdf() {
         lifecycleScope.launch {
-            val fileName = "Laporan_Pengeluaran_${selectedMonth}_${selectedYear}.pdf"
+            val fileName = "Laporan_Pengeluaran_${selectedMonth}_${selectedYear}-${DateHelper.getCurrentDateTime()}.pdf"
             val pdfFile = File(getExternalFilesDir(null), fileName)
 
             fundViewModel.getAllFundsForExport(selectedMonth, selectedYear).collectLatest { resource ->
@@ -238,13 +239,13 @@ class FundsActivity : AppCompatActivity() {
                                     )
 
                                     // Create table
-                                    val table = Table(4)
+                                    val table = Table(3)
                                     table.setWidth(UnitValue.createPercentValue(100f))
 
                                     // Add headers
                                     table.addHeaderCell("Tanggal")
                                     table.addHeaderCell("Deskripsi")
-                                    table.addHeaderCell("Jumlah")
+                                    table.addHeaderCell("Bayar")
 
                                     // Add data
                                     fundsList.forEach { item ->
@@ -274,7 +275,7 @@ class FundsActivity : AppCompatActivity() {
 
     private fun exportAsExcel() {
         lifecycleScope.launch {
-            val fileName = "Laporan_Pengeluaran_${selectedMonth}_${selectedYear}.csv"
+            val fileName = "Laporan_Pengeluaran_${selectedMonth}_${selectedYear}-${DateHelper.getCurrentDateTime()}.csv"
             val csvFile = File(getExternalFilesDir(null), fileName)
 
             fundViewModel.getAllFundsForExport(selectedMonth, selectedYear).collectLatest { resource ->
@@ -285,13 +286,13 @@ class FundsActivity : AppCompatActivity() {
                             val csvContent = StringBuilder()
 
                             // Add headers
-                            csvContent.append("Tanggal,Deskripsi,Jumlah,Status\n")
+                            csvContent.append("Tanggal,Deskripsi,Bayar\n")
 
                             // Add data
                             fundsList.forEach { item ->
                                 csvContent.append("\"${formatDate(item.createdAt ?: "")}\",")
                                 csvContent.append("\"${item.description ?: ""}\",")
-                                csvContent.append("\"${item.amount ?: 0}\",")
+                                csvContent.append("\"${item.amount ?: 0}\",\n")
                             }
 
                             // Write to file

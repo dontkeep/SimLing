@@ -48,4 +48,18 @@ object DateHelper {
         return currentYear.toString()
 
     }
+
+    fun getCurrentDateTime(): String {
+        val calendar = Calendar.getInstance()
+        return String.format(
+            Locale.getDefault(),
+            "%02d%02d%02d%02d%02d%02d",
+            calendar.get(Calendar.DAY_OF_MONTH),
+            calendar.get(Calendar.MONTH) + 1,
+            calendar.get(Calendar.YEAR) % 100,
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            calendar.get(Calendar.SECOND)
+        )
+    }
 }
