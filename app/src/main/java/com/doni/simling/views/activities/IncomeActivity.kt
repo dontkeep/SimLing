@@ -232,7 +232,7 @@ class IncomeActivity : AppCompatActivity() {
                                 val pdf = PdfDocument(writer)
                                 Document(pdf).use { document ->
                                     document.add(
-                                        Paragraph("Laporan Pemasukan_Kas Bulanan")
+                                        Paragraph("Laporan Pemasukan Kas Bulanan")
                                             .setTextAlignment(TextAlignment.CENTER)
                                             .setFontSize(18f)
                                     )
