@@ -57,7 +57,7 @@ class IncomeActivity : AppCompatActivity() {
             showMonthYearPickerDialog()
         }
 
-        binding.floatingActionButton.setOnClickListener {
+        binding.addIncomeBtn.setOnClickListener {
             val intent = Intent(this, AddIncomeActivity::class.java)
             startActivity(intent)
         }
@@ -95,10 +95,10 @@ class IncomeActivity : AppCompatActivity() {
         val role = roleManager.getRole()
         when (role) {
             ROLE_ADMIN -> {
-                binding.floatingActionButton.visibility = View.GONE
+                binding.addIncomeBtn.visibility = View.GONE
             }
             ROLE_WARGA -> {
-                binding.floatingActionButton.visibility = View.VISIBLE
+                binding.addIncomeBtn.visibility = View.VISIBLE
                 binding.tvRole.visibility = View.GONE
             }
         }

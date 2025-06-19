@@ -179,7 +179,7 @@ interface ApiServices {
         @Query("year") year: String,
         @Query("page") page: Int? = null,
         @Query("limit") limit: Int? = null
-    ): GetAllFundsResponse //update this to the correct response type
+    ): GetAllFundsResponse
 
     @GET("/api/funds-income")
     suspend fun getAllIncome(

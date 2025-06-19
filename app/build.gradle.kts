@@ -92,12 +92,14 @@ dependencies {
     // QR Code Scanner
     implementation("com.github.dontkeep:QRZen:v1.5.0")
 
-    //Smooth Bottombar lib
+    // Smooth Bottombar lib
     implementation(libs.smoothbottombar)
 
-    //Glide lib
+    // Glide lib
     implementation(libs.glide)
 
+    // Itext lib
+    implementation("com.itextpdf:itext7-core:7.2.5")
 
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.paging.runtime.ktx)

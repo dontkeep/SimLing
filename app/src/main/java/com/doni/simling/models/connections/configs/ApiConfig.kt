@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.logging.HttpLoggingInterceptor
 
 class ApiConfig {
-    private val BASE_URL = "https://api-simling.naufalad.com" //change into actual endpoint once the backend is deployed
+    private val BASE_URL = "http://192.168.254.83:3004" //change into actual endpoint once the backend is deployed
 
     fun getApiService(): ApiServices {
         val loggingInterceptor =
