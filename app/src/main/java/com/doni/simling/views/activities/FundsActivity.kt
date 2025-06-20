@@ -222,6 +222,8 @@ class FundsActivity : AppCompatActivity() {
                 when (resource) {
                     is Resource.Success -> {
                         val fundsList = resource.data ?: emptyList()
+                        val totalIncome = fundsList.sumOf { it.amount ?: 0 } // Hitung total
+
                         try {
                             PdfWriter(pdfFile).use { writer ->
                                 val pdf = PdfDocument(writer)
@@ -245,7 +247,7 @@ class FundsActivity : AppCompatActivity() {
                                     // Add headers
                                     table.addHeaderCell("Tanggal")
                                     table.addHeaderCell("Deskripsi")
-                                    table.addHeaderCell("Bayar")
+                                    table.addHeaderCell("Jumlah")
 
                                     // Add data
                                     fundsList.forEach { item ->
@@ -255,6 +257,14 @@ class FundsActivity : AppCompatActivity() {
                                     }
 
                                     document.add(table)
+
+                                    // Add total income
+                                    document.add(
+                                        Paragraph("Total Pendapatan: ${formatCurrency(totalIncome)}")
+                                            .setTextAlignment(TextAlignment.RIGHT)
+                                            .setFontSize(14f)
+                                            .setBold()
+                                    )
                                 }
                             }
                             showExportSuccessDialog(pdfFile)
@@ -282,18 +292,24 @@ class FundsActivity : AppCompatActivity() {
                 when (resource) {
                     is Resource.Success -> {
                         val fundsList = resource.data ?: emptyList()
+                        val totalIncome = fundsList.sumOf { it.amount ?: 0 } // Hitung total
+
                         try {
                             val csvContent = StringBuilder()
 
                             // Add headers
-                            csvContent.append("Tanggal,Deskripsi,Bayar\n")
+                            csvContent.append("Tanggal,Deskripsi,Jumlah\n")
 
                             // Add data
                             fundsList.forEach { item ->
                                 csvContent.append("\"${formatDateTime(item.createdAt ?: "")}\",")
                                 csvContent.append("\"${item.description ?: ""}\",")
-                                csvContent.append("\"${item.amount ?: 0}\",\n")
+                                csvContent.append("\"${item.amount ?: 0}\"\n")
                             }
+
+                            // Add total income
+                            csvContent.append("\n")
+                            csvContent.append("\"\",\"Total Pendapatan\",\"${totalIncome}\"")
 
                             // Write to file
                             FileOutputStream(csvFile).use { fos ->

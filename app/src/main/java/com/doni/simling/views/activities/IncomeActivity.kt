@@ -227,23 +227,27 @@ class IncomeActivity : AppCompatActivity() {
                 when (resource) {
                     is Resource.Success -> {
                         val fundsList = resource.data ?: emptyList()
+                        val totalIncome = fundsList.sumOf { it.amount ?: 0 } // Hitung total pemasukan
+
                         try {
                             PdfWriter(pdfFile).use { writer ->
                                 val pdf = PdfDocument(writer)
                                 Document(pdf).use { document ->
+                                    // Judul Laporan
                                     document.add(
                                         Paragraph("Laporan Pemasukan Kas Bulanan")
                                             .setTextAlignment(TextAlignment.CENTER)
                                             .setFontSize(18f)
                                     )
 
+                                    // Periode Bulan Tahun
                                     document.add(
                                         Paragraph("Bulan: $selectedMonth-$selectedYear")
                                             .setTextAlignment(TextAlignment.CENTER)
                                             .setFontSize(14f)
                                     )
 
-                                    // Create table
+                                    // Create table dengan 5 kolom
                                     val table = Table(5)
                                     table.setWidth(UnitValue.createPercentValue(100f))
 
@@ -252,7 +256,7 @@ class IncomeActivity : AppCompatActivity() {
                                     table.addHeaderCell("Nama")
                                     table.addHeaderCell("Blok")
                                     table.addHeaderCell("Status")
-                                    table.addHeaderCell("Bayar")
+                                    table.addHeaderCell("Jumlah")
 
                                     // Add data
                                     fundsList.forEach { item ->
@@ -264,6 +268,15 @@ class IncomeActivity : AppCompatActivity() {
                                     }
 
                                     document.add(table)
+
+                                    // Tambahkan total pemasukan
+                                    document.add(
+                                        Paragraph("Total Pemasukan: ${formatCurrency(totalIncome)}")
+                                            .setTextAlignment(TextAlignment.RIGHT)
+                                            .setFontSize(14f)
+                                            .setBold()
+                                            .setMarginTop(10f)
+                                    )
                                 }
                             }
                             showExportSuccessDialog(pdfFile)
@@ -275,7 +288,7 @@ class IncomeActivity : AppCompatActivity() {
                         Toast.makeText(this@IncomeActivity, "Gagal mengambil data: ${resource.message}", Toast.LENGTH_SHORT).show()
                     }
                     is Resource.Loading -> {
-                        // Optionally show a loading indicator
+                        // Tampilkan loading indicator jika perlu
                     }
                 }
             }
@@ -291,11 +304,13 @@ class IncomeActivity : AppCompatActivity() {
                 when (resource) {
                     is Resource.Success -> {
                         val fundsList = resource.data ?: emptyList()
+                        val totalIncome = fundsList.sumOf { it.amount ?: 0 } // Hitung total pemasukan
+
                         try {
                             val csvContent = StringBuilder()
 
                             // Add headers
-                            csvContent.append("Tanggal,Nama,Blok,Status,Bayar\n")
+                            csvContent.append("Tanggal,Nama,Blok,Status,Jumlah\n")
 
                             // Add data
                             fundsList.forEach { item ->
@@ -303,8 +318,12 @@ class IncomeActivity : AppCompatActivity() {
                                 csvContent.append("\"${item.userName ?: ""}\",")
                                 csvContent.append("\"${item.block ?: ""}\",")
                                 csvContent.append("\"${item.status ?: ""}\",")
-                                csvContent.append("\"${item.amount ?: 0}\",\n")
+                                csvContent.append("\"${item.amount ?: 0}\"\n")
                             }
+
+                            // Tambahkan baris total
+                            csvContent.append("\n")
+                            csvContent.append("\"\",\"\",\"\",\"Total Pemasukan\",\"${formatCurrency(totalIncome)}\"")
 
                             // Write to file
                             FileOutputStream(csvFile).use { fos ->
@@ -320,7 +339,7 @@ class IncomeActivity : AppCompatActivity() {
                         Toast.makeText(this@IncomeActivity, "Gagal mengambil data: ${resource.message}", Toast.LENGTH_SHORT).show()
                     }
                     is Resource.Loading -> {
-                        // Show loading indicator
+                        // Tampilkan loading indicator jika perlu
                     }
                 }
             }
