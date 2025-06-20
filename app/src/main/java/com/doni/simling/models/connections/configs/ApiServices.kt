@@ -89,7 +89,9 @@ interface ApiServices {
     suspend fun getFundsExpense(
         @Header("Authorization") token: String,
         @Query("month") month: String,
-        @Query("year") year: String
+        @Query("year") year: String,
+        @Query("page") page: Int? = null,
+        @Query("limit") limit: Int? = null
     ): List<CreateUserResponse> //update this to the correct response type
 
     @GET("/api/home")

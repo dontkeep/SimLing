@@ -13,6 +13,9 @@ data class GetAllFundsResponse(
 	@field:SerializedName("limit")
 	val limit: Int? = null,
 
+	@field:SerializedName("totalIncome")
+	val totalFundIncome: Double? = null,
+
 	@field:SerializedName("totalPages")
 	val totalPages: Int? = null,
 
