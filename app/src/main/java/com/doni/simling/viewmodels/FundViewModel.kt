@@ -67,6 +67,14 @@ class FundViewModel @Inject constructor(
         return repository.getFunds(month, year).cachedIn(viewModelScope)
     }
 
+    fun getAllFundsForExport(month: String, year: String): Flow<Resource<List<DataItemFunds>>> {
+        return repository.getAllFundsForExport(month, year)
+    }
+
+    fun getAllIncomeForExport(month: String, year: String): Flow<Resource<List<DataItemFunds>>> {
+        return repository.getAllIncomeForExport(month, year)
+    }
+
     fun getFundIncomeDetail(id: Int) {
         viewModelScope.launch {
             repository.getFundIncomeDetail(id).collect { resource ->

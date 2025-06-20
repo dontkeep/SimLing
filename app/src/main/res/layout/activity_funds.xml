@@ -111,7 +111,21 @@
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floating_action_button"
+                android:id="@+id/printBtn"
+                style="?attr/floatingActionButtonSmallStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:backgroundTint="@color/green_pastel"
+                app:layout_constraintBottom_toTopOf="@+id/addExpenseBtn"
+                app:layout_constraintEnd_toEndOf="@+id/addExpenseBtn"
+                app:layout_constraintStart_toStartOf="@+id/addExpenseBtn"
+                app:srcCompat="@drawable/ic_print"
+                app:tint="@color/black" />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addExpenseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -122,6 +136,15 @@
                 app:srcCompat="@drawable/ic_add"
                 app:tint="@color/black" />
 
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
