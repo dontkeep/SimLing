@@ -76,6 +76,7 @@ class DetailIncomeActivity : AppCompatActivity() {
                             binding.tvAddress.text = fund.block ?: "N/A"
                             binding.tvAmount.text = formatCurrency(fund.amount ?: 0)
                             binding.tvDetailDate.text = formatDate(fund.createdAt)
+                            binding.tvDateTransfer.text = formatDate(fund.timeTransferred)
 
                             fund.image?.let { imagePath ->
                                 Glide.with(this@DetailIncomeActivity)

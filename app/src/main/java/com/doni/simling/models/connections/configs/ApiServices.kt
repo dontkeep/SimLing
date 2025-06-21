@@ -115,7 +115,8 @@ interface ApiServices {
         @Part("is_income") isIncome: RequestBody,
         @Part("status") status: RequestBody,
         @Part image: MultipartBody.Part,
-        @Part("block") block: RequestBody?
+        @Part("block") block: RequestBody?,
+        @Part("time_transferred") time: RequestBody
     ): Response<CreateFundResponse>
 
     @PUT("/api/funds/{id}/reject")

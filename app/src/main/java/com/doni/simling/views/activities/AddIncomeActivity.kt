@@ -1,5 +1,7 @@
 package com.doni.simling.views.activities
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -29,6 +31,10 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.GregorianCalendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class AddIncomeActivity : AppCompatActivity() {
@@ -37,6 +43,8 @@ class AddIncomeActivity : AppCompatActivity() {
 
     private var receiptImagePath: String? = null
     private val viewModel: FundViewModel by viewModels()
+
+    private var selectedDateTime: Calendar = Calendar.getInstance()
 
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -65,6 +73,10 @@ class AddIncomeActivity : AppCompatActivity() {
             openGallery()
         }
 
+        binding.etDate.setOnClickListener {
+            showDateTimePicker()
+        }
+
         binding.saveBtn.setOnClickListener {
             handleSaveButtonClick()
         }
@@ -72,6 +84,44 @@ class AddIncomeActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener {
             finish()
         }
+    }
+
+    private fun showDateTimePicker() {
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, year, month, day ->
+                selectedDateTime.set(year, month, day)
+                showTimePicker()
+            },
+            selectedDateTime.get(Calendar.YEAR),
+            selectedDateTime.get(Calendar.MONTH),
+            selectedDateTime.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
+    private fun showTimePicker() {
+        val timePickerDialog = TimePickerDialog(
+            this,
+            { _, hourOfDay, minute ->
+                selectedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                selectedDateTime.set(Calendar.MINUTE, minute)
+
+                updateDateTimeDisplay()
+            },
+            selectedDateTime.get(Calendar.HOUR_OF_DAY),
+            selectedDateTime.get(Calendar.MINUTE),
+            true
+        )
+        timePickerDialog.show()
+    }
+
+    private fun updateDateTimeDisplay() {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val displayDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault())
+
+        binding.etDate.setText(dateFormat.format(selectedDateTime.time))
+        binding.tvName.text = displayDateFormat.format(selectedDateTime.time)
     }
 
     private fun handleSaveButtonClick() {
@@ -98,6 +148,16 @@ class AddIncomeActivity : AppCompatActivity() {
                 return@launch
             }
 
+            val date = binding.etDate.text?.toString() // Changed from textFieldDate to etDate
+            if (date.isNullOrEmpty()) {
+                Toast.makeText(
+                    this@AddIncomeActivity,
+                    "Tanggal tidak boleh kosong",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+
             if (receiptImagePath == null) {
                 Toast.makeText(
                     this@AddIncomeActivity,
@@ -107,11 +167,33 @@ class AddIncomeActivity : AppCompatActivity() {
                 return@launch
             }
 
+            // Convert the display date (dd/MM/yyyy HH:mm) to API format (yyyy-MM-dd HH:mm:ss)
+            val apiDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val displayDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            val apiDateString = try {
+                val dateObj = displayDateFormat.parse(date)
+                apiDateFormat.format(dateObj!!)
+            } catch (e: Exception) {
+                date // fallback to original if parsing fails
+            }
+
             val amountRequestBody = createRequestBody(cleanString)
             val descriptionRequestBody = createRequestBody("")
             val isIncomeRequestBody = createRequestBody("true")
             val statusRequestBody = createRequestBody("Pending")
             val blockRequestBody = createRequestBody(address)
+            val dateRequestBody = createRequestBody(apiDateString)
+
+            // Log all request data
+            Log.d("AddIncomeActivity", "===== REQUEST DATA ======")
+            Log.d("AddIncomeActivity", "Amount: $cleanString")
+            Log.d("AddIncomeActivity", "Description: (empty)")
+            Log.d("AddIncomeActivity", "Is Income: true")
+            Log.d("AddIncomeActivity", "Status: Pending")
+            Log.d("AddIncomeActivity", "Block: $address")
+            Log.d("AddIncomeActivity", "Date (display): $date")
+            Log.d("AddIncomeActivity", "Date (API format): $apiDateString")
+            Log.d("AddIncomeActivity", "Image Path: $receiptImagePath")
 
             receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
             val receiptImagePart = createImagePart("image", receiptImagePath)
@@ -125,13 +207,16 @@ class AddIncomeActivity : AppCompatActivity() {
                 return@launch
             }
 
+            Log.d("AddIncomeActivity", "Image Part: ${receiptImagePart.body?.contentType()}")
+
             viewModel.addFund(
                 amount = amountRequestBody,
                 description = descriptionRequestBody,
                 isIncome = isIncomeRequestBody,
                 status = statusRequestBody,
                 image = receiptImagePart,
-                block = blockRequestBody
+                block = blockRequestBody,
+                time = dateRequestBody
             ).collect { resource ->
                 handleResource(resource)
             }

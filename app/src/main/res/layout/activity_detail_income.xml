@@ -168,6 +168,26 @@
 
 
             <TextView
+                android:id="@+id/tvTextDateTransfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Waktu Transfer: "
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/tvTextDate"
+                app:layout_constraintTop_toBottomOf="@+id/tvTextAddress" />
+
+            <TextView
+                android:id="@+id/tvDateTransfer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="07-10-2022 11:11:11"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTextDateTransfer"
+                app:layout_constraintStart_toEndOf="@+id/tvTextDateTransfer"
+                app:layout_constraintTop_toTopOf="@+id/tvTextDateTransfer" />
+
+            <TextView
                 android:id="@+id/tvTextAmount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -194,11 +214,10 @@
                 android:id="@+id/tvTextDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="Diunggah pada: "
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvTextAddress" />
+                app:layout_constraintTop_toTopOf="@+id/tvDetailDate" />
 
             <TextView
                 android:id="@+id/tvDetailDate"
@@ -208,7 +227,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvTextDate"
-                app:layout_constraintTop_toBottomOf="@id/tvTextAddress"
+                app:layout_constraintTop_toBottomOf="@+id/tvTextDateTransfer"
                 tools:text="2024-10-22" />
 
             <ProgressBar

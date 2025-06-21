@@ -113,6 +113,8 @@ class AddFundActivity : AppCompatActivity() {
             val isIncomeRequestBody = createRequestBody("false")
             val statusRequestBody = createRequestBody("Accepted")
             val blockRequestBody = createRequestBody("")
+            val time = System.currentTimeMillis().toString()
+            val timeRequest = createRequestBody(time)
 
             receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
             val receiptImagePart = createImagePart("image", receiptImagePath)
@@ -132,7 +134,8 @@ class AddFundActivity : AppCompatActivity() {
                 isIncome = isIncomeRequestBody,
                 status = statusRequestBody,
                 image = receiptImagePart,
-                block = blockRequestBody
+                block = blockRequestBody,
+                time = timeRequest
             ).collect { resource ->
                 handleResource(resource)
             }

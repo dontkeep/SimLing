@@ -35,5 +35,8 @@ data class DataFundIncome(
 	val isIncome: Boolean? = null,
 
 	@field:SerializedName("status")
-	val status: String? = null
+	val status: String? = null,
+
+	@field:SerializedName("time_transferred")
+	val timeTransferred: String? = null
 )

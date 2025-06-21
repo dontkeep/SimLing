@@ -126,6 +126,7 @@ class DataRepositories @Inject constructor(
         status: RequestBody,
         image: MultipartBody.Part,
         block: RequestBody?,
+        time: RequestBody
     ): Flow<Resource<CreateFundResponse>> = flow {
         emit(Resource.Loading())
         try {
@@ -142,7 +143,8 @@ class DataRepositories @Inject constructor(
                 isIncome = isIncome,
                 status = status,
                 image = image,
-                block = block
+                block = block,
+                time = time
             )
 
             if (response.isSuccessful) {

@@ -119,6 +119,7 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
                 isZoomEnabled = true,
                 isTapToFocusEnabled = true,
                 onQrCodeScanned = { result ->
+                    if (!scanningEnabled) return@BorderQRScanner
                     val block = result
                     val lat = location?.latitude
                     val lon = location?.longitude

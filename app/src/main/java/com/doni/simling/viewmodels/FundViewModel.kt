@@ -46,6 +46,7 @@ class FundViewModel @Inject constructor(
         status: RequestBody,
         image: MultipartBody.Part,
         block: RequestBody?,
+        time: RequestBody
     ): Flow<Resource<CreateFundResponse>> = repository.addFund(
         amount = amount,
         description = description,
@@ -53,6 +54,7 @@ class FundViewModel @Inject constructor(
         status = status,
         image = image,
         block = block,
+        time = time
     )
 
     fun setImageUri(path: String) {
