@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.doni.simling.databinding.ActivityDetailIncomeBinding
 import com.doni.simling.helper.DateHelper.formatDate
+import com.doni.simling.helper.DateHelper.formatDateTime
 import com.doni.simling.helper.Resource
 import com.doni.simling.helper.formatCurrency
 import com.doni.simling.helper.manager.RoleManager
@@ -76,7 +77,7 @@ class DetailIncomeActivity : AppCompatActivity() {
                             binding.tvAddress.text = fund.block ?: "N/A"
                             binding.tvAmount.text = formatCurrency(fund.amount ?: 0)
                             binding.tvDetailDate.text = formatDate(fund.createdAt)
-                            binding.tvDateTransfer.text = formatDate(fund.timeTransferred)
+                            binding.tvDateTransfer.text = formatDateTime(fund.timeTransferred)
 
                             fund.image?.let { imagePath ->
                                 Glide.with(this@DetailIncomeActivity)

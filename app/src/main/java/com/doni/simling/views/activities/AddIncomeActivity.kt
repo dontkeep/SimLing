@@ -1,11 +1,13 @@
 package com.doni.simling.views.activities
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
@@ -17,6 +19,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.doni.simling.R
 import com.doni.simling.databinding.ActivityAddIncomeBinding
 import com.doni.simling.helper.Resource
 import com.doni.simling.helper.setupCurrencyFormatting
@@ -33,7 +36,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.GregorianCalendar
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -91,7 +93,7 @@ class AddIncomeActivity : AppCompatActivity() {
             this,
             { _, year, month, day ->
                 selectedDateTime.set(year, month, day)
-                showTimePicker()
+                showTimePickerWithSeconds()
             },
             selectedDateTime.get(Calendar.YEAR),
             selectedDateTime.get(Calendar.MONTH),
@@ -100,25 +102,44 @@ class AddIncomeActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    private fun showTimePicker() {
-        val timePickerDialog = TimePickerDialog(
-            this,
-            { _, hourOfDay, minute ->
-                selectedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                selectedDateTime.set(Calendar.MINUTE, minute)
+    private fun showTimePickerWithSeconds() {
+        val inflater = LayoutInflater.from(this)
+        val dialogView = inflater.inflate(R.layout.dialog_time_picker, null)
 
+        val hourPicker = dialogView.findViewById<NumberPicker>(R.id.hour_picker)
+        val minutePicker = dialogView.findViewById<NumberPicker>(R.id.minute_picker)
+        val secondPicker = dialogView.findViewById<NumberPicker>(R.id.second_picker)
+
+        // Configure hour picker
+        hourPicker.minValue = 0
+        hourPicker.maxValue = 23
+        hourPicker.value = selectedDateTime.get(Calendar.HOUR_OF_DAY)
+
+        // Configure minute picker
+        minutePicker.minValue = 0
+        minutePicker.maxValue = 59
+        minutePicker.value = selectedDateTime.get(Calendar.MINUTE)
+
+        // Configure second picker
+        secondPicker.minValue = 0
+        secondPicker.maxValue = 59
+        secondPicker.value = selectedDateTime.get(Calendar.SECOND)
+
+        AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setPositiveButton("OK") { _, _ ->
+                selectedDateTime.set(Calendar.HOUR_OF_DAY, hourPicker.value)
+                selectedDateTime.set(Calendar.MINUTE, minutePicker.value)
+                selectedDateTime.set(Calendar.SECOND, secondPicker.value)
                 updateDateTimeDisplay()
-            },
-            selectedDateTime.get(Calendar.HOUR_OF_DAY),
-            selectedDateTime.get(Calendar.MINUTE),
-            true
-        )
-        timePickerDialog.show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun updateDateTimeDisplay() {
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-        val displayDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        val displayDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.getDefault())
 
         binding.etDate.setText(dateFormat.format(selectedDateTime.time))
         binding.tvName.text = displayDateFormat.format(selectedDateTime.time)
@@ -148,7 +169,7 @@ class AddIncomeActivity : AppCompatActivity() {
                 return@launch
             }
 
-            val date = binding.etDate.text?.toString() // Changed from textFieldDate to etDate
+            val date = binding.etDate.text?.toString()
             if (date.isNullOrEmpty()) {
                 Toast.makeText(
                     this@AddIncomeActivity,
@@ -167,14 +188,14 @@ class AddIncomeActivity : AppCompatActivity() {
                 return@launch
             }
 
-            // Convert the display date (dd/MM/yyyy HH:mm) to API format (yyyy-MM-dd HH:mm:ss)
+            // Convert the display date (dd/MM/yyyy HH:mm:ss) to API format (yyyy-MM-dd HH:mm:ss)
             val apiDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val displayDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            val displayDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
             val apiDateString = try {
                 val dateObj = displayDateFormat.parse(date)
                 apiDateFormat.format(dateObj!!)
             } catch (e: Exception) {
-                date // fallback to original if parsing fails
+                date
             }
 
             val amountRequestBody = createRequestBody(cleanString)
@@ -252,7 +273,6 @@ class AddIncomeActivity : AppCompatActivity() {
         return null
     }
 
-
     private fun uriToFile(uri: Uri): File {
         val inputStream = contentResolver.openInputStream(uri)
         val file = File.createTempFile("receipt_", ".jpg", cacheDir)
@@ -263,7 +283,6 @@ class AddIncomeActivity : AppCompatActivity() {
         }
         return file
     }
-
 
     private fun handleResource(resource: Resource<CreateFundResponse>) {
         when (resource) {
