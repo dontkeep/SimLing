@@ -41,5 +41,8 @@ data class DataItemUser(
 	val id: Int? = null,
 
 	@field:SerializedName("email")
-	val email: String? = null
+	val email: String? = null,
+
+	@field:SerializedName("state")
+	val status: String? = null
 ) : Parcelable

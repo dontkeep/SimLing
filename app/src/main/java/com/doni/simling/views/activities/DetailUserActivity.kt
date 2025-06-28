@@ -64,6 +64,7 @@ class DetailUserActivity : AppCompatActivity() {
             binding.tvName.text = user.name ?: "N/A"
             binding.tvHp.text = user.phoneNo ?: "N/A"
             binding.tvAddress.text = user.address ?: "N/A"
+            binding.tvStatus.text = user.status ?: "N/A"
         }
 
         binding.icDelete.setOnClickListener {

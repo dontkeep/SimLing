@@ -56,6 +56,7 @@ class UserViewModel @Inject constructor(
         email: String,
         password: String,
         address: String,
+        status: String,
         roleId: Int
     ) {
         viewModelScope.launch {
@@ -66,6 +67,7 @@ class UserViewModel @Inject constructor(
                 email = email,
                 password = password,
                 address = address,
+                status = status,
                 roleId = roleId
             ).collect { resource ->
                 _editUser.postValue(resource)

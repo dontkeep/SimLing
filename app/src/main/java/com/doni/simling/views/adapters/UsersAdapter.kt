@@ -1,10 +1,12 @@
 package com.doni.simling.views.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.doni.simling.R
 import com.doni.simling.databinding.ItemUsersBinding
 import com.doni.simling.models.connections.responses.DataItemUser
 
@@ -19,6 +21,26 @@ class UsersAdapter(
             binding.tvName.text = user.name
             binding.tvAddress.text = user.address
             binding.root.setOnClickListener { onItemClick(user) }
+
+            when (user.status?.lowercase()) {
+                "aktif" -> {
+                    binding.tvStatus.text = "AKTIF"
+                    binding.tvStatus.setBackgroundResource(R.drawable.bg_status_active)
+                }
+                "pindah" -> {
+                    binding.tvStatus.text = "PINDAH"
+                    binding.tvStatus.setBackgroundResource(R.drawable.bg_status_moved)
+                }
+                "wafat" -> {
+                    binding.tvStatus.text = "WAFAT"
+                    binding.tvStatus.setBackgroundResource(R.drawable.bg_status_deceased)
+                    binding.tvStatus.setTextColor(Color.WHITE)
+                }
+                else -> {
+                    binding.tvStatus.text = user.status?.uppercase() ?: "-"
+                    binding.tvStatus.setBackgroundResource(R.drawable.bg_status_active)
+                }
+            }
         }
     }
 

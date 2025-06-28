@@ -144,6 +144,26 @@
                 app:layout_constraintStart_toEndOf="@+id/tvTextName"
                 app:layout_constraintTop_toTopOf="@+id/tvTextAddress" />
 
+
+            <TextView
+                android:id="@+id/tvTextStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Status : "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Aktif"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTextStatus"
+                app:layout_constraintStart_toEndOf="@+id/tvTextName"
+                app:layout_constraintTop_toTopOf="@+id/tvTextStatus" />
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"

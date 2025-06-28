@@ -194,6 +194,32 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/tvStatusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status Warga"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textFieldStatus"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textFieldStatus" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textFieldStatus"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/textFieldPasswordVerify"
+                app:layout_constraintStart_toStartOf="@+id/textFieldPasswordVerify"
+                app:layout_constraintTop_toBottomOf="@+id/textFieldPasswordVerify">
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/saveBtn"

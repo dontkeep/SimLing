@@ -16,9 +16,7 @@ import com.doni.simling.models.connections.responses.CreateFundResponse
 import com.doni.simling.models.connections.responses.CreateUserResponse
 import com.doni.simling.models.connections.responses.DataItem3
 import com.doni.simling.models.connections.responses.DataItemFunds
-import com.doni.simling.models.connections.responses.DataItemSecurityByUser
 import com.doni.simling.models.connections.responses.DataItemUser
-import com.doni.simling.models.connections.responses.GetAllSecurityRecordsResponse
 import com.doni.simling.models.connections.responses.DeleteUserResponse
 import com.doni.simling.models.connections.responses.EditUserResponse
 import com.doni.simling.models.connections.responses.GetFundIncomeDetailResponse
@@ -110,6 +108,7 @@ class DataRepositories @Inject constructor(
                     name = name,
                     address = address,
                     role_id = roleId,
+                    status = "Aktif",
                     family_members = emptyList()
                 )
             )
@@ -442,6 +441,7 @@ class DataRepositories @Inject constructor(
         email: String,
         password: String,
         address: String,
+        status: String,
         roleId: Int
     ): Flow<Resource<EditUserResponse>> = flow {
         emit(Resource.Loading())
@@ -462,6 +462,7 @@ class DataRepositories @Inject constructor(
                     name = name,
                     address = address,
                     role_id = roleId,
+                    status = status,
                     family_members = emptyList()
                 )
             )

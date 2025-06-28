@@ -9,5 +9,6 @@ data class UserRequest(
     @SerializedName("name") val name: String,
     @SerializedName("address") val address: String,
     @SerializedName("role_id") val role_id: Int,
+    @SerializedName("state") val status: String,
     @SerializedName("family_members") val family_members: List<String> = emptyList()
 )

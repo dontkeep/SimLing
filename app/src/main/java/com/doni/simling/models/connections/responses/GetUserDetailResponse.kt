@@ -59,5 +59,8 @@ data class DataUserDetail(
 	val password: String? = null,
 
 	@field:SerializedName("Name")
-	val name: String? = null
+	val name: String? = null,
+
+	@field:SerializedName("state")
+	val status: String? = null
 )
