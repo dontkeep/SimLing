@@ -51,7 +51,6 @@ class DetailUserActivity : AppCompatActivity() {
 
         if (userRole == 1) {
             binding.icEdit.visibility = View.GONE
-            binding.icDelete.visibility = View.GONE
         }
 
         if (userId == -1) {
@@ -66,11 +65,6 @@ class DetailUserActivity : AppCompatActivity() {
             binding.tvAddress.text = user.address ?: "N/A"
             binding.tvStatus.text = user.status ?: "N/A"
         }
-
-        binding.icDelete.setOnClickListener {
-            observeDelete(userId)
-        }
-
         binding.icEdit.setOnClickListener {
             userData?.let { user ->
                 val intent = Intent(this, EditUserActivity::class.java).apply {
@@ -85,14 +79,6 @@ class DetailUserActivity : AppCompatActivity() {
         }
 
         observeDeleteState()
-    }
-
-    private fun observeDelete(id: Int) {
-        showConfirmationDialog(
-            title = "Konfirmasi Penghapusan",
-            message = "Apakah Anda yakin ingin menghapus user ini?",
-            positiveAction = { usersViewModel.deleteUser(id) }
-        )
     }
 
     private fun observeDeleteState() {
@@ -120,20 +106,5 @@ class DetailUserActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun showConfirmationDialog(
-        title: String,
-        message: String,
-        positiveAction: () -> Unit
-    ) {
-        AlertDialog.Builder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("Ya") { _, _ ->
-                positiveAction()
-            }
-            .setNegativeButton("Tidak", null)
-            .show()
     }
 }
