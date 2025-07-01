@@ -236,12 +236,12 @@ class DataRepositories @Inject constructor(
         }
     }
 
-    fun getUsers(): Flow<PagingData<DataItemUser>> {
+    fun getUsers(query: String? = null): Flow<PagingData<DataItemUser>> {
         val token = tokenManager.getToken()
         return Pager(
             config = androidx.paging.PagingConfig(pageSize = 10),
             pagingSourceFactory = {
-                UserPagingSource(apiServices, token, 10)
+                UserPagingSource(apiServices, token, 10, query)
             }
         ).flow
     }

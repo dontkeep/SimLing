@@ -8,7 +8,8 @@ import com.doni.simling.models.connections.responses.DataItemUser
 class UserPagingSource(
     private val apiService: ApiServices,
     private val token: String?,
-    private val pageSize: Int = 10
+    private val pageSize: Int = 10,
+    private val query: String? = null
 ) : PagingSource<Int, DataItemUser>() {
     var onDataLoaded: ((List<DataItemUser>) -> Unit)? = null
 
@@ -20,7 +21,8 @@ class UserPagingSource(
             val response = apiService.getUsers(
                 token = "Bearer $token",
                 page = page,
-                limit = pageSize
+                limit = pageSize,
+                name = query
             )
             val data = response.data?.filterNotNull() ?: emptyList()
             onDataLoaded?.invoke(data)

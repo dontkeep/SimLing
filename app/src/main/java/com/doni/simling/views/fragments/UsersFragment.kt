@@ -67,14 +67,14 @@ class UsersFragment : Fragment() {
         binding.searchView.editText.setOnEditorActionListener { _, _, _ ->
             binding.searchView.hide()
             binding.cardParent.visibility = View.VISIBLE
-            filterUsers(binding.searchView.text.toString())
+            searchUsers(binding.searchView.text.toString())
             true
         }
 
         binding.searchView.editText.doAfterTextChanged { editable ->
             editable?.let {
                 binding.cardParent.visibility = View.GONE
-                filterUsers(it.toString())
+                searchUsers(it.toString())
             }
         }
     }
@@ -87,19 +87,11 @@ class UsersFragment : Fragment() {
         }
     }
 
-    private fun filterUsers(query: String) {
-        val filteredList = if (query.isEmpty()) {
-            viewModel.allUsers
-        } else {
-            viewModel.allUsers.filter { user ->
-                user.name?.contains(query, ignoreCase = true) == true ||
-                        user.email?.contains(query, ignoreCase = true) == true ||
-                        user.phoneNo?.contains(query, ignoreCase = true) == true
-            }
-        }
-
+    private fun searchUsers(query: String) {
         lifecycleScope.launch {
-            adapter.submitData(PagingData.from(filteredList))
+            viewModel.searchUsers(query).collect { pagingData ->
+                adapter.submitData(pagingData)
+            }
         }
     }
 

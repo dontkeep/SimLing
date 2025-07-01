@@ -56,7 +56,8 @@ interface ApiServices {
     suspend fun getUsers(
         @Header("Authorization") token: String,
         @Query("page") page: Int? = null,
-        @Query("limit") limit: Int? = null
+        @Query("limit") limit: Int? = null,
+        @Query("name") name: String? = null
     ): GetAllUserResponse
 
     @GET("/api/users/{id}")

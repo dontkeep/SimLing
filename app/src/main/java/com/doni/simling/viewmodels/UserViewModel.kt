@@ -32,14 +32,18 @@ class UserViewModel @Inject constructor(
     private val _editUser = MutableLiveData<Resource<EditUserResponse>>()
     val editUser: LiveData<Resource<EditUserResponse>> get() = _editUser
 
-    fun getUsers(): Flow<PagingData<DataItemUser>> = repository.getUsers()
-        .map { pagingData ->
-            pagingData.map { user ->
-                _allUsers.add(user)
-                user
-            }
-        }
-        .cachedIn(viewModelScope)
+    private var currentQuery: String? = null
+
+    fun searchUsers(query: String): Flow<PagingData<DataItemUser>> {
+        currentQuery = query
+        return repository.getUsers(query)
+            .cachedIn(viewModelScope)
+    }
+
+    fun getUsers(): Flow<PagingData<DataItemUser>> {
+        return repository.getUsers(currentQuery)
+            .cachedIn(viewModelScope)
+    }
 
     fun deleteUser(id: Int) {
         viewModelScope.launch {
