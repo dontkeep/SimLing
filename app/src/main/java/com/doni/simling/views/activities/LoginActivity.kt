@@ -6,16 +6,14 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.Snackbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.doni.simling.R
 import com.doni.simling.databinding.ActivityLoginBinding
 import com.doni.simling.helper.Resource
 import com.doni.simling.viewmodels.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -84,12 +82,17 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(phoneNo, password)
             } else {
                 Snackbar.make(
-                    this,
                     binding.root,
                     "Isi semua field terlebih dahulu",
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
+        }
+
+        binding.privacyBtn.setOnClickListener {
+            val privacyUrl = "https://www.privacypolicies.com/live/dbae5141-ed03-47a1-bb1b-01adf13227e9"
+            val intent = Intent(Intent.ACTION_VIEW, privacyUrl.toUri())
+            startActivity(intent)
         }
     }
 }

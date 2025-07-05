@@ -52,7 +52,7 @@
                 android:id="@+id/loginSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Welcome to SimLing App"
+                android:text="Selamat datang di App Simling"
                 android:layout_marginTop="8dp"
                 android:layout_marginHorizontal="16dp"
                 android:textSize="16sp"
@@ -88,22 +88,21 @@
                 android:id="@+id/edPhoneNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="40dp"
+                android:hint="Masukkan no hp"
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusTopStart="16dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textCluster"
-                android:layout_marginHorizontal="24dp"
-                android:hint="Insert Phone Number">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textCluster">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    />
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,7 +119,7 @@
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusTopStart="16dp"
-                android:hint="Insert Password">
+                android:hint="Masukkan Password">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -129,31 +128,32 @@
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
-                android:id="@+id/forgetPassword"
+                android:id="@+id/privacyBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Forget Password?"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:clickable="true"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="24dp"
-                app:layout_constraintTop_toBottomOf="@+id/edPassword"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
+                android:text="Kebijakan Privasi"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/loginButton"
+                app:layout_constraintStart_toStartOf="@+id/loginButton"
+                app:layout_constraintTop_toBottomOf="@+id/loginButton" />
 
             <Button
                 android:id="@+id/loginButton"
                 style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                android:backgroundTint="@color/green_pastel"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="12dp"
-                app:layout_constraintTop_toBottomOf="@id/forgetPassword"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/green_pastel"
                 android:text="Login"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edPassword" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
