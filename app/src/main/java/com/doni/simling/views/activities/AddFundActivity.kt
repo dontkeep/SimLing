@@ -27,8 +27,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
+import com.doni.simling.helper.ImageCompressor
 import com.doni.simling.helper.setupCurrencyFormatting
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class AddFundActivity : AppCompatActivity() {
@@ -112,9 +116,7 @@ class AddFundActivity : AppCompatActivity() {
             val descriptionRequestBody = createRequestBody(description)
             val isIncomeRequestBody = createRequestBody("false")
             val statusRequestBody = createRequestBody("Accepted")
-            val blockRequestBody = createRequestBody("")
-            val time = System.currentTimeMillis().toString()
-            val timeRequest = createRequestBody(time)
+            val blockRequestBody = createRequestBody("ADMIN")
 
             receiptImagePath = viewModel.imageUri.value ?: receiptImagePath
             val receiptImagePart = createImagePart("image", receiptImagePath)
@@ -128,6 +130,20 @@ class AddFundActivity : AppCompatActivity() {
                 return@launch
             }
 
+            val timeMillis = System.currentTimeMillis()
+            val formattedTime = convertMillisToDateTime(timeMillis)
+            val timeRequestBody = createRequestBody(formattedTime)
+
+            // Log all request data
+            Log.d("AddIncomeActivity", "===== REQUEST DATA ======")
+            Log.d("AddFundActivity", "Amount: $cleanString")
+            Log.d("AddFundActivity", "Description: $description")
+            Log.d("AddFundActivity", "Is Income: false")
+            Log.d("AddFundActivity", "Status: Accepted")
+            Log.d("AddFundActivity", "Block: ADMIN")
+            Log.d("AddFundActivity", "Time (formatted): $formattedTime")
+            Log.d("AddFundActivity", "Image Path: $receiptImagePath")
+
             viewModel.addFund(
                 amount = amountRequestBody,
                 description = descriptionRequestBody,
@@ -135,18 +151,34 @@ class AddFundActivity : AppCompatActivity() {
                 status = statusRequestBody,
                 image = receiptImagePart,
                 block = blockRequestBody,
-                time = timeRequest
+                time = timeRequestBody
             ).collect { resource ->
                 handleResource(resource)
             }
         }
     }
 
+    private fun convertMillisToDateTime(millis: Long): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return dateFormat.format(Date(millis))
+    }
+
     private fun processSelectedImage(uri: Uri) {
-        val file = uriToFile(uri)
-        receiptImagePath = file.absolutePath
-        viewModel.setImageUri(receiptImagePath!!)
-        binding.imageView.setImageURI(uri)
+        Log.d("AddFundActivity", "Memulai kompresi gambar...")
+        val compressedFile = ImageCompressor.compressImage(this, uri)
+
+        if (compressedFile != null) {
+            receiptImagePath = compressedFile.absolutePath
+            viewModel.setImageUri(receiptImagePath!!)
+            binding.imageView.setImageURI(Uri.fromFile(compressedFile))
+
+            // Log path dan ukuran akhir
+            Log.d("AddFundActivity", "Gambar tersimpan di: $receiptImagePath")
+            Log.d("AddFundActivity", "Ukuran akhir: ${compressedFile.length() / 1024} KB")
+        } else {
+            Toast.makeText(this, "Gagal memproses gambar", Toast.LENGTH_SHORT).show()
+            Log.e("AddFundActivity", "Kompresi gagal untuk URI: $uri")
+        }
     }
 
     private fun openGallery() {
@@ -157,11 +189,10 @@ class AddFundActivity : AppCompatActivity() {
         value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull())
 
     private fun createImagePart(partName: String, uriPath: String?): MultipartBody.Part? {
-        Log.d("CreateListActivity", "Image Path: $uriPath")
         uriPath?.let { path ->
             val file = File(path)
             if (!file.exists()) {
-                Log.e("CreateListActivity", "File not found at path: $path")
+                Log.e("AddIncomeActivity", "File not found: $path")
                 return null
             }
 

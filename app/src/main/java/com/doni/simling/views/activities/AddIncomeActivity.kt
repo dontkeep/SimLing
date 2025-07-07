@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.doni.simling.R
 import com.doni.simling.databinding.ActivityAddIncomeBinding
+import com.doni.simling.helper.ImageCompressor
 import com.doni.simling.helper.Resource
 import com.doni.simling.helper.setupCurrencyFormatting
 import com.doni.simling.models.connections.responses.CreateFundResponse
@@ -245,10 +246,14 @@ class AddIncomeActivity : AppCompatActivity() {
     }
 
     private fun processSelectedImage(uri: Uri) {
-        val file = uriToFile(uri)
-        receiptImagePath = file.absolutePath
-        viewModel.setImageUri(receiptImagePath!!)
-        binding.imageView.setImageURI(uri)
+        val compressedFile = ImageCompressor.compressImage(this, uri)
+        if (compressedFile != null) {
+            receiptImagePath = compressedFile.absolutePath
+            viewModel.setImageUri(receiptImagePath!!)
+            binding.imageView.setImageURI(Uri.fromFile(compressedFile))
+        } else {
+            Toast.makeText(this, "Gagal memproses gambar", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun openGallery() {
@@ -259,11 +264,10 @@ class AddIncomeActivity : AppCompatActivity() {
         value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull())
 
     private fun createImagePart(partName: String, uriPath: String?): MultipartBody.Part? {
-        Log.d("CreateListActivity", "Image Path: $uriPath")
         uriPath?.let { path ->
             val file = File(path)
             if (!file.exists()) {
-                Log.e("CreateListActivity", "File not found at path: $path")
+                Log.e("AddFundActivity", "File not found: $path")
                 return null
             }
 
