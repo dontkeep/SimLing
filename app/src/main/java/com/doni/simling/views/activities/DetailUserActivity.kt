@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -41,6 +40,13 @@ class DetailUserActivity : AppCompatActivity() {
             insets
         }
         binding.progressBar.visibility = View.GONE
+
+        val currentRole = roleManager.getRole()
+        if (currentRole == RoleManager.ROLE_ADMIN) {
+            binding.icEdit.visibility = View.VISIBLE
+        } else {
+            binding.icEdit.visibility = View.GONE
+        }
 
         val userData = intent.getParcelableExtra<DataItemUser>("USER_DATA")
         Log.d("DetailUserActivity", "User data: $userData")

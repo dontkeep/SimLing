@@ -42,18 +42,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-<!--            <ImageView-->
-<!--                android:id="@+id/icDelete"-->
-<!--                android:layout_width="24dp"-->
-<!--                android:layout_height="24dp"-->
-<!--                android:layout_marginEnd="16dp"-->
-<!--                android:clickable="true"-->
-<!--                android:contentDescription="@string/content_image"-->
-<!--                android:src="@drawable/ic_delete"-->
-<!--                app:layout_constraintBottom_toBottomOf="@+id/titleHeader"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="@+id/titleHeader" />-->
-
             <ImageView
                 android:id="@+id/icEdit"
                 android:layout_width="24dp"
@@ -62,6 +50,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/content_image"
                 android:src="@drawable/ic_edit"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/titleHeader"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/titleHeader" />
