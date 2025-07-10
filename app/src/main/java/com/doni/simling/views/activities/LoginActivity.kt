@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
                     binding.edPassword.isEnabled = true
                     Snackbar.make(
                         binding.root,
-                        resource.message ?: "Login failed",
+                        "Akun tidak ditemukan",
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }
