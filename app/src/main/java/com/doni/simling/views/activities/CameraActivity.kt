@@ -12,58 +12,44 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.activity.viewModels
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.al.qrzen.permissionhandler.CameraPermissionHandler
 import com.al.qrzen.permissionhandler.PermissionDeniedMessage
 import com.al.qrzen.scanner.BorderQRScanner
-import com.al.qrzen.scanner.ZenScannerScreen
 import com.doni.simling.helper.Resource
 import com.doni.simling.viewmodels.CameraViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.doni.simling.helper.liveDataAsState
 
-
 @AndroidEntryPoint
 class CameraActivity : AppCompatActivity() {
-
     private val cameraViewModel: CameraViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             MainScreen(cameraViewModel)
         }
     }
 }
 
-
 @Composable
 fun MainScreen(cameraViewModel: CameraViewModel) {
     var hasCameraPermission by remember { mutableStateOf<Boolean?>(null) }
     var hasLocationPermission by remember { mutableStateOf(false) }
     var location: Location? by remember { mutableStateOf(null) }
-    var showDialog by remember { mutableStateOf(false) }
-    var scanningEnabled by remember { mutableStateOf(true) }
-
-    LaunchedEffect(Unit) {
-        scanningEnabled = true
-    }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+    var isScanningEnabled by remember { mutableStateOf(true) }
+    var isProcessing by remember { mutableStateOf(false) }
+    var lastScannedResult by remember { mutableStateOf<String?>(null) } // Track last scanned QR
 
     CameraPermissionHandler { granted ->
         hasCameraPermission = granted
@@ -87,54 +73,68 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
     }
 
     val addSecurityRecordState = liveDataAsState(cameraViewModel.addSecurityRecord).value
-
     LaunchedEffect(addSecurityRecordState) {
         if (addSecurityRecordState is Resource.Success) {
-            showDialog = true
+            showSuccessDialog = true
+            isScanningEnabled = false
         }
     }
 
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = {},
-            title = { Text("Success") },
-            text = { Text("Security record added successfully!") },
-            confirmButton = {
-                Button(onClick = {
-                    showDialog = false
-                    (context as? Activity)?.finish()
-                }) {
-                    Text("OK")
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (hasCameraPermission) {
+            true -> {
+                if (isScanningEnabled) {
+                    BorderQRScanner(
+                        modifier = Modifier.fillMaxSize(),
+                        isScanningEnabled = isScanningEnabled,
+                        isFlashEnabled = true,
+                        isZoomEnabled = true,
+                        isTapToFocusEnabled = true,
+                        onQrCodeScanned = { result ->
+                            if (isProcessing || result == lastScannedResult) {
+                                return@BorderQRScanner // Ignore if already processing or same QR
+                            }
+
+                            isProcessing = true
+                            lastScannedResult = result // Store the last scanned result
+                            Log.d("QR Code", "Scanned result: $result")
+
+                            val lat = location?.latitude
+                            val lon = location?.longitude
+
+                            if (lat != null && lon != null) {
+                                cameraViewModel.addSecurityRecord(result, lat, lon)
+                            }
+
+                            isProcessing = false
+                        }
+                    )
                 }
             }
-        )
-    }
+            false -> PermissionDeniedMessage()
+            null -> Text("Requesting permission...")
+        }
 
-    when (hasCameraPermission) {
-        true -> {
-            BorderQRScanner(
-                modifier = Modifier.fillMaxSize(),
-                isScanningEnabled = scanningEnabled,
-                isFlashEnabled = true,
-                isZoomEnabled = true,
-                isTapToFocusEnabled = true,
-                onQrCodeScanned = { result ->
-                    if (!scanningEnabled) return@BorderQRScanner
-                    val block = result
-                    val lat = location?.latitude
-                    val lon = location?.longitude
-                    if (lat != null && lon != null) {
-                        scanningEnabled = false
-                        cameraViewModel.addSecurityRecord(block, lat, lon)
+        if (showSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showSuccessDialog = false
+                    (context as? Activity)?.finish()
+                },
+                title = { Text("Success") },
+                text = { Text("Security record added successfully!") },
+                confirmButton = {
+                    Button(onClick = {
+                        showSuccessDialog = false
+                        (context as? Activity)?.finish()
+                    }) {
+                        Text("OK")
                     }
                 }
             )
         }
-        false -> PermissionDeniedMessage()
-        null -> Text("Requesting permission...")
     }
 }
-
 
 @SuppressLint("MissingPermission")
 fun getLastKnownLocation(context: Context): Location? {

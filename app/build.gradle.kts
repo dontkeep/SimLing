@@ -96,7 +96,7 @@ dependencies {
     implementation(libs.androidx.foundation.layout)
 
     // QR Code Scanner
-    implementation("com.github.dontkeep:QRZen:v1.5.1")
+    implementation("com.github.dontkeep:QRZen:1.5.7")
 
     // Smooth Bottombar lib
     implementation(libs.smoothbottombar)
