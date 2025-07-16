@@ -25,11 +25,19 @@ object DateHelper {
     fun formatDate(dateString: String?): String {
         if (dateString.isNullOrBlank()) return "-"
         return try {
-            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val formatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-            val date = parser.parse(dateString)
-            if (date != null) formatter.format(date) else "-"
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+            inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+            val date = inputFormat.parse(dateString)
+            if (date != null) {
+                val outputFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale("id", "ID"))
+                outputFormat.timeZone = TimeZone.getTimeZone("Asia/Jakarta")
+                outputFormat.format(date)
+            } else {
+                "-"
+            }
         } catch (e: Exception) {
+            e.printStackTrace()
             "-"
         }
     }
