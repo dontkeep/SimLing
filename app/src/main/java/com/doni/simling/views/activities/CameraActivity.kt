@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.al.qrzen.permissionhandler.CameraPermissionHandler
 import com.al.qrzen.permissionhandler.PermissionDeniedMessage
-import com.al.qrzen.scanner.BorderQRScanner
+import com.al.qrzen.scanner.ZenScannerScreen
 import com.doni.simling.helper.Resource
 import com.doni.simling.viewmodels.CameraViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,7 +84,7 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
         when (hasCameraPermission) {
             true -> {
                 if (isScanningEnabled) {
-                    BorderQRScanner(
+                    ZenScannerScreen(
                         modifier = Modifier.fillMaxSize(),
                         isScanningEnabled = isScanningEnabled,
                         isFlashEnabled = true,
@@ -92,7 +92,7 @@ fun MainScreen(cameraViewModel: CameraViewModel) {
                         isTapToFocusEnabled = true,
                         onQrCodeScanned = { result ->
                             if (isProcessing || result == lastScannedResult) {
-                                return@BorderQRScanner // Ignore if already processing or same QR
+                                return@ZenScannerScreen // Ignore if already processing or same QR
                             }
 
                             isProcessing = true
